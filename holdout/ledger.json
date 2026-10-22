@@ -1,5 +1,31 @@
 {
   "datasets": {
+    "4f154f7d58ada7840779ba09c20610d061a3d2eb1a0a6cfe5de8715ab930cb88": [
+      {
+        "frozen_params": {
+          "fast": 40,
+          "slow": 200
+        },
+        "run_id": "quant-foundry-20261022T001654Z-532d7d85-a1",
+        "strategy": "trend"
+      },
+      {
+        "frozen_params": {
+          "entry_z": 1.0,
+          "lookback": 40
+        },
+        "run_id": "quant-foundry-20261022T001654Z-532d7d85-a1",
+        "strategy": "meanrev"
+      },
+      {
+        "frozen_params": {
+          "N": 100,
+          "k": 1.0
+        },
+        "run_id": "quant-foundry-20261022T001654Z-532d7d85-a1",
+        "strategy": "breakout"
+      }
+    ],
     "70ffbfac957256d432786affdc4b5dfb415a2cae7f97bfa83f5b67ae710036f4": [
       {
         "frozen_params": {

@@ -1,0 +1,23 @@
+{
+  "dataset_sha256": "4f154f7d58ada7840779ba09c20610d061a3d2eb1a0a6cfe5de8715ab930cb88",
+  "strategies": [
+    {
+      "contaminated": false,
+      "prior_evaluations": 0,
+      "prior_runs": [],
+      "strategy": "trend"
+    },
+    {
+      "contaminated": false,
+      "prior_evaluations": 0,
+      "prior_runs": [],
+      "strategy": "meanrev"
+    },
+    {
+      "contaminated": false,
+      "prior_evaluations": 0,
+      "prior_runs": [],
+      "strategy": "breakout"
+    }
+  ]
+}

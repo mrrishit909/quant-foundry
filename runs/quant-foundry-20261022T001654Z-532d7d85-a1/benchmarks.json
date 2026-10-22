@@ -1,0 +1,80 @@
+{
+  "buyhold": {
+    "description": "equal-weight (1/n) buy-and-hold of every symbol, bought at the first open of the span with the same fee and slippage, never rebalanced",
+    "holdout": {
+      "metrics": {
+        "cagr": -0.08136567989,
+        "exposure": 0.9946920376,
+        "fees_paid": 9.949775482,
+        "max_drawdown": -0.1914267018,
+        "sharpe": -0.8558430918,
+        "slippage_paid": 49.7240154,
+        "total_return": -0.1561109859,
+        "trades": 8,
+        "turnover": 0.9949775482,
+        "volatility": 0.09399788911
+      },
+      "span": [
+        "2020-10-20",
+        "2022-09-23"
+      ]
+    },
+    "oos": {
+      "metrics": {
+        "cagr": 0.0105423624,
+        "exposure": 0.9969036994,
+        "fees_paid": 9.965798649,
+        "max_drawdown": -0.1190334144,
+        "sharpe": 0.1615252245,
+        "slippage_paid": 49.8040912,
+        "total_return": 0.0319616831,
+        "trades": 8,
+        "turnover": 0.9965798649,
+        "volatility": 0.08990674504
+      },
+      "span": [
+        "2017-09-14",
+        "2020-08-06"
+      ]
+    }
+  },
+  "cash": {
+    "description": "100,000 in cash earning 0 for the whole span",
+    "holdout": {
+      "metrics": {
+        "cagr": 0.0,
+        "exposure": 0.0,
+        "fees_paid": 0.0,
+        "max_drawdown": 0.0,
+        "sharpe": 0.0,
+        "slippage_paid": 0.0,
+        "total_return": 0.0,
+        "trades": 0,
+        "turnover": 0.0,
+        "volatility": 0.0
+      },
+      "span": [
+        "2020-10-20",
+        "2022-09-23"
+      ]
+    },
+    "oos": {
+      "metrics": {
+        "cagr": 0.0,
+        "exposure": 0.0,
+        "fees_paid": 0.0,
+        "max_drawdown": 0.0,
+        "sharpe": 0.0,
+        "slippage_paid": 0.0,
+        "total_return": 0.0,
+        "trades": 0,
+        "turnover": 0.0,
+        "volatility": 0.0
+      },
+      "span": [
+        "2017-09-14",
+        "2020-08-06"
+      ]
+    }
+  }
+}

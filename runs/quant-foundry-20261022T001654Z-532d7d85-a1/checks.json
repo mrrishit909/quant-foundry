@@ -1,0 +1,106 @@
+{
+  "accounting": {
+    "backtests_checked": 329,
+    "max_abs_error": 2.037268132e-10,
+    "passed": true,
+    "tolerance": 1e-06
+  },
+  "determinism": {
+    "note": "All randomness comes from numpy PCG64 seeded by the request seed. Outputs contain no timestamps or paths; JSON is written with sorted keys and floats rounded to 10 significant digits, CSV money columns use fixed decimals, and dataset.csv.gz is written with gzip mtime=0. The same request gives byte-identical files."
+  },
+  "holdout": {
+    "evaluated_once": true,
+    "evaluations_per_strategy": {
+      "breakout": 1,
+      "meanrev": 1,
+      "trend": 1
+    },
+    "selection_frozen_before_holdout": true
+  },
+  "lookahead_probe": {
+    "cutoff_date": "2022-04-28",
+    "passed": true,
+    "strategies": [
+      {
+        "equal": true,
+        "params": {
+          "fast": 40,
+          "slow": 200
+        },
+        "strategy": "trend"
+      },
+      {
+        "equal": true,
+        "params": {
+          "entry_z": 1.0,
+          "lookback": 40
+        },
+        "strategy": "meanrev"
+      },
+      {
+        "equal": true,
+        "params": {
+          "N": 100,
+          "k": 1.0
+        },
+        "strategy": "breakout"
+      }
+    ]
+  },
+  "missing_data_events": [
+    {
+      "date": "2018-04-13",
+      "held_qty": 96,
+      "order_deferred": false,
+      "segment": "out_of_sample",
+      "strategy": "trend",
+      "symbol": "SYN06",
+      "window": 1
+    },
+    {
+      "date": "2018-04-13",
+      "held_qty": 0,
+      "order_deferred": false,
+      "segment": "out_of_sample",
+      "strategy": "meanrev",
+      "symbol": "SYN06",
+      "window": 1
+    },
+    {
+      "date": "2018-04-13",
+      "held_qty": 120,
+      "order_deferred": false,
+      "segment": "out_of_sample",
+      "strategy": "breakout",
+      "symbol": "SYN06",
+      "window": 1
+    },
+    {
+      "date": "2020-11-24",
+      "held_qty": 100,
+      "order_deferred": false,
+      "segment": "holdout",
+      "strategy": "trend",
+      "symbol": "SYN06",
+      "window": "holdout"
+    },
+    {
+      "date": "2020-11-24",
+      "held_qty": 80,
+      "order_deferred": false,
+      "segment": "holdout",
+      "strategy": "meanrev",
+      "symbol": "SYN06",
+      "window": "holdout"
+    },
+    {
+      "date": "2020-11-24",
+      "held_qty": 0,
+      "order_deferred": false,
+      "segment": "holdout",
+      "strategy": "breakout",
+      "symbol": "SYN06",
+      "window": "holdout"
+    }
+  ]
+}

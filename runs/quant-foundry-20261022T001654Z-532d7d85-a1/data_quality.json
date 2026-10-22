@@ -1,0 +1,102 @@
+{
+  "checks": [
+    {
+      "detail": {
+        "columns": [
+          "date",
+          "symbol",
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume"
+        ]
+      },
+      "name": "schema",
+      "status": "pass"
+    },
+    {
+      "detail": {
+        "out_of_order_rows": 0
+      },
+      "name": "sorted_dates",
+      "status": "pass"
+    },
+    {
+      "detail": {
+        "count": 0,
+        "examples": []
+      },
+      "name": "duplicate_rows",
+      "status": "pass"
+    },
+    {
+      "detail": {
+        "violations": 0
+      },
+      "name": "ohlc_consistency",
+      "status": "pass"
+    },
+    {
+      "detail": {
+        "violations": 0
+      },
+      "name": "positive_prices",
+      "status": "pass"
+    },
+    {
+      "detail": {
+        "negative_or_fractional": 0
+      },
+      "name": "non_negative_volume",
+      "status": "pass"
+    },
+    {
+      "detail": {
+        "by_symbol": {
+          "SYN06": {
+            "count": 3,
+            "dates": [
+              "2017-07-19",
+              "2018-04-13",
+              "2020-11-24"
+            ]
+          }
+        }
+      },
+      "name": "missing_bars",
+      "status": "warn"
+    },
+    {
+      "detail": {
+        "count": 0,
+        "examples": [],
+        "threshold": 0.25
+      },
+      "name": "large_moves",
+      "status": "pass"
+    },
+    {
+      "detail": {
+        "calendar_days": 2016,
+        "missing_business_days": 0,
+        "missing_examples": [],
+        "weekend_dates": []
+      },
+      "name": "calendar_coverage",
+      "status": "pass"
+    }
+  ],
+  "rows": 16128,
+  "status": "warn",
+  "symbols": [
+    "SYN01",
+    "SYN02",
+    "SYN03",
+    "SYN04",
+    "SYN05",
+    "SYN06",
+    "SYN07",
+    "SYN08"
+  ]
+}
