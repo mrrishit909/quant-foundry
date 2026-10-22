@@ -1,0 +1,95 @@
+{
+  "calendar": {
+    "holidays": false,
+    "kind": "synthetic_business_days",
+    "text": "Synthetic Monday to Friday business days from 2015-01-02 with no exchange holidays."
+  },
+  "cash": {
+    "initial": 100000.0,
+    "interest_rate": 0.0,
+    "leverage": false,
+    "text": "Each backtest starts with 100,000 in cash. Cash earns 0. No leverage: a buy that cash cannot cover (including its fee) is reduced to the whole shares cash covers."
+  },
+  "equity_chaining": {
+    "text": "equity.csv shows the chained OOS curve and then continues into the holdout by chaining holdout returns onto the last OOS value. The OOS span ends the day before the holdout."
+  },
+  "fees": {
+    "fee_bps": 1.0,
+    "model": "proportional",
+    "text": "Fee = 1.0 bps of absolute traded notional, paid in cash on every fill."
+  },
+  "fill_timing": {
+    "rule": "next_open",
+    "text": "Orders fill at the open of the next bar (t+1). A window's first open is driven by the state at the close of the bar before the window."
+  },
+  "holdout_liquidation": {
+    "rule": "sell_all_at_final_close",
+    "text": "At the end of the holdout every open position is sold at the final close (the last valid close if the final bar is missing) with the same slippage (applied to the close) and fee, so holdout returns are realized. These fills appear in trades.csv with the final close in the ref_open column. The holdout buy-and-hold benchmark is liquidated the same way."
+  },
+  "holdout_split": {
+    "rounding": "floor_exact",
+    "text": "The last floor(days * holdout_fraction) dates are the sealed holdout (exact decimal floor). It is evaluated once per strategy with the parameters chosen in the walk-forward window adjacent to it."
+  },
+  "metrics": {
+    "text": "Daily simple returns; 252 trading days per year; Sharpe = mean / std (ddof=1) * sqrt(252) with rf = 0 and 0.0 for a flat curve; max_drawdown is a negative fraction; turnover = sum of daily traded notional / previous close equity; exposure = mean gross weight at the close; trades counts fills, round_trips counts sells that take a position to zero; days is the number of daily observations; stitched fees and slippage are summed over segments, each run on the initial cash.",
+    "trading_days_per_year": 252
+  },
+  "missing_data": {
+    "rule": "defer_and_mark_last_close",
+    "text": "A missing bar (NaN) cannot be traded: its order is deferred to the symbol's next valid open, the position is marked at the last valid close, and each such day is recorded in checks.json. Signals are computed on the symbol's valid bars only and the last state is carried across the gap."
+  },
+  "position_limits": {
+    "allocation": "equal_weight_among_long",
+    "cap_enforced": "at_decision_time",
+    "max_gross_exposure": 1.0,
+    "max_weight_per_symbol": 0.25,
+    "text": "Target weight = min(1 / number of long symbols, 0.25), sized at the signal close as floor(weight * equity / close). Enforced exactly: at every decision (a change in the set of long symbols) no position is left above 0.25 of equity at that close; larger ones are trimmed to target. Not enforced: between decisions positions drift with prices and can exceed 0.25. Gross exposure never exceeds 1.0 because cash cannot go negative."
+  },
+  "rebalance": {
+    "resize_band": 0.1,
+    "rule": "on_long_set_change",
+    "text": "Targets are recomputed only when the set of long symbols changes. Entries and exits always execute; a symbol that stays long is resized to the new equal weight if its share count is more than 10% off target or it is above the 0.25 cap. No calendar rebalancing. Sells execute before buys at the same open."
+  },
+  "share_rounding": {
+    "rule": "floor",
+    "text": "Whole shares only, rounded down."
+  },
+  "shorting": {
+    "supported": false,
+    "text": "Short selling is not supported; allow_short must be false."
+  },
+  "signal_timing": {
+    "rule": "close_of_day_t",
+    "text": "computed from bars up to and including the close of day t; the resulting order fills at the open of day t+1"
+  },
+  "slippage": {
+    "model": "fixed_bps_adverse",
+    "slippage_bps": 5.0,
+    "text": "Fixed adverse slippage of 5.0 bps: buys fill at open * (1 + s), sells at open * (1 - s). It is embedded in fill prices and also reported separately as sum(|fill - open| * qty). No other market impact is modelled."
+  },
+  "verdict_rules": {
+    "grid_combos_tested": 27,
+    "holdout_return_positive_after_liquidation": true,
+    "min_oos_sharpe": 0.3,
+    "min_round_trips": 10,
+    "min_stability": 0.3,
+    "min_t_stat": 2.0,
+    "must_beat_buyhold_oos_sharpe": true,
+    "oos_days": 504,
+    "sharpe_standard_error": 0.7071067812,
+    "stability_tolerance": 0.5,
+    "text": "A strategy is accepted only if ALL hold: (1) OOS Sharpe > 0.3; (2) OOS Sharpe t-statistic = Sharpe * sqrt(OOS days / 252) >= 2.0; (3) OOS Sharpe > buy-and-hold OOS Sharpe; (4) holdout total return after liquidation > 0; (5) parameter stability (share of grid combos with OOS Sharpe within 0.5 of the best) >= 0.3; (6) at least 10 completed OOS round trips (sells that close a position). Rule 2 exists because this run tried 27 grid combos in-sample and the standard error of an annualized Sharpe is about sqrt(252 / days), 0.71 over its 504 OOS days: a Sharpe of 0.3 alone is well inside the noise. A t-statistic of 2.0 is a guard, not a full multiple-comparison correction; noise can still pass occasionally."
+  },
+  "walk_forward_layout": {
+    "direction": "backward_from_holdout",
+    "max_windows": 8,
+    "text": "Windows are laid out backward from the last development day: the last test window ends the day before the holdout, earlier windows step back by test_days, at most 8 windows, and no train window starts before bar 200. Development bars before the first train window are only used as indicator history."
+  },
+  "warmup": {
+    "prefix_bars": 200,
+    "text": "No train window starts before development bar 200 (the largest warm-up in the registry), so indicators are always primed by earlier bars. Each backtest computes signals from all bars before its start, never from bars after it."
+  },
+  "window_boundaries": {
+    "text": "Each OOS window backtest starts flat with the initial cash. Positions still open at a window's end are marked at that close without an exit cost and are not liquidated; the next window starts flat, so a position a continuous run would have carried pays one extra entry cost (a small conservative penalty), and its round trip only counts once it closes inside a window. OOS segments are contiguous and chained by returns."
+  }
+}
