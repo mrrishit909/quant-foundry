@@ -1,0 +1,189 @@
+{
+  "target": "https://mrrishit909.github.io/quant-foundry/",
+  "status": "passed",
+  "passed": 30,
+  "failed": 0,
+  "skipped": 0,
+  "tests": [
+    {
+      "title": "report: verdict, chart, comparison, no overflow, accessible",
+      "project": "tablet-768",
+      "status": "passed",
+      "duration": 5351
+    },
+    {
+      "title": "report: verdict, chart, comparison, no overflow, accessible",
+      "project": "mobile-390",
+      "status": "passed",
+      "duration": 5479
+    },
+    {
+      "title": "deep link: strategy dossier, ledger filter and pagination, parameter explorer",
+      "project": "tablet-768",
+      "status": "passed",
+      "duration": 3688
+    },
+    {
+      "title": "deep link: strategy dossier, ledger filter and pagination, parameter explorer",
+      "project": "mobile-390",
+      "status": "passed",
+      "duration": 4712
+    },
+    {
+      "title": "chart: legend toggles a series and the keyboard crosshair reads values",
+      "project": "tablet-768",
+      "status": "passed",
+      "duration": 1399
+    },
+    {
+      "title": "chart: legend toggles a series and the keyboard crosshair reads values",
+      "project": "mobile-390",
+      "status": "passed",
+      "duration": 1623
+    },
+    {
+      "title": "controls: disclosure expands, cost sliders recompute, reset restores",
+      "project": "tablet-768",
+      "status": "passed",
+      "duration": 1592
+    },
+    {
+      "title": "controls: disclosure expands, cost sliders recompute, reset restores",
+      "project": "mobile-390",
+      "status": "passed",
+      "duration": 1368
+    },
+    {
+      "title": "navigation: current page state, runs ledger, back button, request link",
+      "project": "tablet-768",
+      "status": "passed",
+      "duration": 2963
+    },
+    {
+      "title": "navigation: current page state, runs ledger, back button, request link",
+      "project": "mobile-390",
+      "status": "passed",
+      "duration": 2818
+    },
+    {
+      "title": "dark theme: report and request pages stay accessible",
+      "project": "tablet-768",
+      "status": "passed",
+      "duration": 3859
+    },
+    {
+      "title": "keyboard: skip link and visible focus",
+      "project": "tablet-768",
+      "status": "passed",
+      "duration": 700
+    },
+    {
+      "title": "dark theme: report and request pages stay accessible",
+      "project": "mobile-390",
+      "status": "passed",
+      "duration": 3973
+    },
+    {
+      "title": "reduced motion: no running animations and content fully visible",
+      "project": "tablet-768",
+      "status": "passed",
+      "duration": 829
+    },
+    {
+      "title": "keyboard: skip link and visible focus",
+      "project": "mobile-390",
+      "status": "passed",
+      "duration": 721
+    },
+    {
+      "title": "reduced motion: no running animations and content fully visible",
+      "project": "mobile-390",
+      "status": "passed",
+      "duration": 921
+    },
+    {
+      "title": "states: loading, empty, error with retry, stale",
+      "project": "tablet-768",
+      "status": "passed",
+      "duration": 2627
+    },
+    {
+      "title": "compare: two runs side by side, or an explanation when only one exists",
+      "project": "tablet-768",
+      "status": "passed",
+      "duration": 474
+    },
+    {
+      "title": "states: loading, empty, error with retry, stale",
+      "project": "mobile-390",
+      "status": "passed",
+      "duration": 2939
+    },
+    {
+      "title": "compare: two runs side by side, or an explanation when only one exists",
+      "project": "mobile-390",
+      "status": "passed",
+      "duration": 562
+    },
+    {
+      "title": "report: verdict, chart, comparison, no overflow, accessible",
+      "project": "desktop-1440",
+      "status": "passed",
+      "duration": 4145
+    },
+    {
+      "title": "deep link: strategy dossier, ledger filter and pagination, parameter explorer",
+      "project": "desktop-1440",
+      "status": "passed",
+      "duration": 2370
+    },
+    {
+      "title": "chart: legend toggles a series and the keyboard crosshair reads values",
+      "project": "desktop-1440",
+      "status": "passed",
+      "duration": 1504
+    },
+    {
+      "title": "controls: disclosure expands, cost sliders recompute, reset restores",
+      "project": "desktop-1440",
+      "status": "passed",
+      "duration": 874
+    },
+    {
+      "title": "navigation: current page state, runs ledger, back button, request link",
+      "project": "desktop-1440",
+      "status": "passed",
+      "duration": 1467
+    },
+    {
+      "title": "dark theme: report and request pages stay accessible",
+      "project": "desktop-1440",
+      "status": "passed",
+      "duration": 3119
+    },
+    {
+      "title": "keyboard: skip link and visible focus",
+      "project": "desktop-1440",
+      "status": "passed",
+      "duration": 556
+    },
+    {
+      "title": "reduced motion: no running animations and content fully visible",
+      "project": "desktop-1440",
+      "status": "passed",
+      "duration": 1264
+    },
+    {
+      "title": "states: loading, empty, error with retry, stale",
+      "project": "desktop-1440",
+      "status": "passed",
+      "duration": 2003
+    },
+    {
+      "title": "compare: two runs side by side, or an explanation when only one exists",
+      "project": "desktop-1440",
+      "status": "passed",
+      "duration": 338
+    }
+  ]
+}
