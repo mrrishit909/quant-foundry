@@ -14,7 +14,7 @@ including blocked ones, is in `releases/history.json`, with findings and small e
 | secret-scan | no credential patterns in tracked files or in the live site's HTML, JS and CSS | `scripts/secret_scan.py --live` |
 | live-site | the Pages URL serves the app and its snapshot points at the state branch's latest run | HTTP checks |
 | published-matches-state | every published result file of the latest run is byte-identical to the state branch | `python -m harness verify-published` |
-| browser | 9 checks x 3 widths (390, 768, 1440) against the live site: report, deep links, ledger filters and pagination, parameter explorer, legend and keyboard crosshair, disclosures, cost sliders, navigation state and back button, skip link and focus, reduced motion, loading / empty / error-retry / stale states, compare view; axe (WCAG 2.2 AA serious and critical), horizontal overflow, console errors and failed same-origin requests | Playwright, `frontend/tests/e2e/site.spec.ts` |
+| browser | 10 checks x 3 widths (390, 768, 1440), all 30 must pass, against the live site: report, deep links, ledger filters and pagination, parameter explorer, legend and keyboard crosshair, disclosures, cost sliders, navigation state and back button, skip link and focus, reduced motion, dark theme (axe plus a direct primary-action contrast check), loading / empty / error-retry / stale states, compare view, the portfolio preview image; axe (WCAG 2.2 AA serious and critical), horizontal overflow, console errors and failed same-origin requests | Playwright, `frontend/tests/e2e/site.spec.ts` |
 
 ## Subjective review (separate from gates)
 
