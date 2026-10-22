@@ -41,8 +41,11 @@ any success. Historical simulation only: no brokerage, no orders, no profit clai
 
 | Font | Package | Licence |
 |---|---|---|
-| Newsreader | `@fontsource-variable/newsreader` 5.3.0 | SIL Open Font License 1.1, (c) The Newsreader Project Authors |
+| Fraunces | `@fontsource-variable/fraunces` 5.3.0 | SIL Open Font License 1.1, (c) The Fraunces Project Authors |
 | IBM Plex Sans Condensed | `@fontsource/ibm-plex-sans-condensed` 5.3.0 | SIL Open Font License 1.1, (c) IBM Corp. |
+
+Motion libraries: `gsap` 3.15.0 (GreenSock Standard "no charge" licence, including ScrollTrigger and
+SplitText) and `lenis` 1.3.23 (MIT), bundled into the site's build.
 
 The fonts are installed from npm (Fontsource packages, which carry the OFL text) and bundled into the
 site's build; nothing loads from a third-party font service. Icons and illustrations are original inline

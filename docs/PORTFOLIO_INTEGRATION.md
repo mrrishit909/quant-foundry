@@ -50,5 +50,8 @@ function.
 
 Isolation: every CSS rule is scoped under `.qf-root` and tokens are defined on that element, not
 `:root`. Listeners (hashchange in hash mode, media queries, resize and intersection observers) are
-registered in React effects and removed on unmount. Fonts are loaded only by the standalone site;
+registered in React effects and removed on unmount. Inertial scrolling (Lenis) and the
+pointer flourishes attach only when the app owns the page (`showShell` with hash routing), so an
+embedding host keeps its own scroll; GSAP motion is scoped to the app's elements and honours
+reduced motion. Fonts are loaded only by the standalone site;
 an embedded copy uses the host's fonts or the stylesheet's serif and condensed fallbacks.

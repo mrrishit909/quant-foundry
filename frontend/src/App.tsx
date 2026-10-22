@@ -4,6 +4,8 @@ import { Icon } from "./components/Icon";
 import { type AppConfig, resolveConfig, type Theme } from "./config";
 import { useRun, useSiteData } from "./data/snapshot";
 import { ago, timestamp } from "./lib/format";
+import { scrollToElement } from "./lib/scroll";
+import { useKinetic } from "./lib/useKinetic";
 import { parseRoute, type Route, routeHref, useRoute } from "./routing";
 import { Report } from "./views/Report";
 import { CompareView, RunsView } from "./views/Runs";
@@ -42,7 +44,35 @@ export function QuantFoundryApp(props: Partial<AppConfig>) {
   const [tick, setTick] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const first = useRef(true);
+  const navigated = useRef(false); // set after the first in-app navigation; the first load has its own intro
+  const [hidden, setHidden] = useState(false);
+  const standalone = config.showShell && config.routing === "hash";
+
+  // Inertial scroll and pointer flourishes belong to the standalone site, never to a host page.
+  useKinetic((k) => (standalone ? k.startSmoothScroll() : undefined), [standalone]);
+  useKinetic((k) => (rootRef.current ? k.attachPointerEffects(rootRef.current) : undefined), []);
+
+  // The masthead steps aside while reading down the page and returns on any upward scroll.
+  useEffect(() => {
+    if (!config.showShell) return;
+    let last = window.scrollY;
+    let frame = 0;
+    const on = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const y = window.scrollY;
+        if (Math.abs(y - last) > 6) setHidden(y > 160 && y > last);
+        last = y;
+      });
+    };
+    window.addEventListener("scroll", on, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", on);
+      cancelAnimationFrame(frame);
+    };
+  }, [config.showShell]);
 
   const needsRun = route.view === "overview" || route.view === "strategy" || route.view === "assumptions";
   const latest = state.status === "ready" ? state.data.snapshot.latest_run_id : null;
@@ -56,11 +86,28 @@ export function QuantFoundryApp(props: Partial<AppConfig>) {
       first.current = false;
       return;
     }
-    if (route.view !== "assumptions") {
-      mainRef.current?.scrollIntoView({ block: "start" });
-      mainRef.current?.focus({ preventScroll: true });
+    navigated.current = true;
+    if (route.view !== "assumptions" && mainRef.current) {
+      scrollToElement(mainRef.current, { immediate: true, offset: 0 });
+      mainRef.current.focus({ preventScroll: true });
     }
   }, [routeKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Navigation transition: each view's headline rises out of a mask and the body follows it in.
+  const viewKey = `${routeKey}:${state.status}:${run.status}`;
+  useKinetic(({ gsap, MOTION_OK, revealLines }, late) => {
+    const main = mainRef.current;
+    if (!main) return;
+    const mm = gsap.matchMedia();
+    mm.add(MOTION_OK, () => {
+      const h1 = main.querySelector("h1:not(.qf-hero-title)");
+      if (h1 && !late) revealLines(h1);
+      if (navigated.current && !main.querySelector(".qf-hero-title")) {
+        gsap.from(main.children, { y: 24, opacity: 0, duration: 0.6, ease: "power3.out", clearProps: "transform,opacity" });
+      }
+    });
+    return () => mm.revert();
+  }, [viewKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const refresh = () => {
     reload();
@@ -111,14 +158,14 @@ export function QuantFoundryApp(props: Partial<AppConfig>) {
   const release = state.status === "ready" ? state.data.release : null;
 
   return (
-    <div className="qf-root" data-theme={theme} onClick={onClick} data-app-root="quant-foundry">
+    <div className="qf-root" data-theme={theme} onClick={onClick} data-app-root="quant-foundry" ref={rootRef}>
       <a className="qf-skip" href="#qf-main" onClick={(e) => { e.preventDefault(); mainRef.current?.focus(); }}>
         Skip to content
       </a>
       {config.showShell && (
-        <header className="qf-masthead">
+        <header className="qf-masthead" data-hidden={hidden && !menuOpen}>
           <a className="qf-wordmark" href={routeHref({ view: "overview" })}>
-            Quant Foundry <span>research lab</span>
+            Quant Foundry<span>Research lab</span>
           </a>
           <nav className="qf-nav" aria-label="Primary" data-open={menuOpen} ref={navRef} id="qf-primary-nav">
             {navStyle && <span className="qf-nav-indicator" style={navStyle} aria-hidden />}
@@ -135,7 +182,7 @@ export function QuantFoundryApp(props: Partial<AppConfig>) {
                 Snapshot {ago(snap.generated_at)}
               </span>
             )}
-            <button type="button" className="qf-btn qf-btn-quiet" onClick={refresh} aria-label="Refresh data from the published snapshot">
+            <button type="button" className="qf-btn qf-btn-quiet qf-magnetic" onClick={refresh} aria-label="Refresh data from the published snapshot">
               <Icon name="refresh" /> <span className="qf-hide-sm">Refresh</span>
             </button>
             <button
@@ -176,6 +223,7 @@ export function QuantFoundryApp(props: Partial<AppConfig>) {
       </main>
       {config.showShell && (
         <footer className="qf-footer">
+          <p className="qf-outro" aria-hidden>Quant <em>Foundry</em></p>
           <div style={{ display: "grid", gap: 10 }}>
             <p>
               Historical simulation on synthetic data. No orders are placed and nothing here is investment advice.

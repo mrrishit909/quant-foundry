@@ -5,14 +5,23 @@ contains no private preferences or credentials.
 
 ## Character
 
-An **editorial research terminal**: a research note you can interrogate. Prose is set like a
-working paper; numbers are set like a terminal (dense, condensed, tabular). The site's one
-bold move is the **referee's verdict**: each strategy is listed in the headline and rejected
-strategies carry a hand-drawn red-pen strike with the rejection reason in the margin, because
-in this lab rejection is the expected, honest outcome. Everything else stays quiet.
+A **kinetic editorial research note**: a broadsheet front page that happens to be a backtest. Bone
+paper, ink and one vermilion pen. The first viewport is a full-bleed headline set in a huge
+variable serif ("Three strategies tested. None survived."), with the run's own equity curves drawn
+faint behind it. The site's one bold move is still the **referee's verdict**: every strategy is
+listed at display size and rejected strategies carry a hand-drawn vermilion strike with the reason
+in the margin, because in this lab rejection is the expected, honest outcome.
 
 Second motif: the **sealed holdout**. Wherever time is plotted, the holdout span is a hatched
 band labelled "Holdout, evaluated once"; it is never mixed with development data.
+
+Third motif: **numbered chapters**. The report reads as nine numbered chapters (italic vermilion
+numerals, ink rule above each). The evidence chapter (equity) is an inverted ink band that bleeds
+to the right edge and opens like a curtain.
+
+Redesigned 2026-10-22 at the owner's request, following the "Kinetic Editorial" direction
+(asymmetric editorial grid, ultra-large variable serif, masked text reveals, magnetic actions,
+curtain section transitions, inertial scroll).
 
 ## Process record
 
@@ -35,65 +44,62 @@ Newsreader suggestion were kept).
 
 ## Tokens (semantic; components never use raw hex)
 
-| Token | Light | Dark | Role |
+| Token | Light (bone) | Dark (ink) | Role |
 |---|---|---|---|
-| canvas | #FFF6E8 ivory | #1C1612 | page |
-| raised | #FFFCF7 | #261E19 | figure plates, popovers |
-| sunken | #F6EAD7 | #15100D | table headers, code, inputs |
-| oat | #E8D7BF | #3A2F28 | decorative fills, low heatmap cells, hairlines |
-| text | #29201B charcoal | #FFF6E8 | primary text (14.9:1 / 16.7:1) |
-| text-2 | #5F4F45 | #CFBDA8 | secondary text (>= 6.5:1 on every surface) |
-| border-strong | #8A7560 | #7D6A59 | control boundaries (>= 3:1) |
-| action | #5A171B burgundy, ivory text (12.5:1) | #E8D7BF, charcoal text (11.3:1) | primary buttons, current nav |
-| pen | #A6422A terracotta | #E08A6E | the referee mark, links |
-| focus | 2 px text-coloured outline + 2 px canvas offset | same | keyboard focus on any surface |
-| success | #4F5236 olive | #B4B78A | passed checks (always with icon + word) |
-| warning | #7A5410 | #E3B65E | warnings (icon + word) |
-| danger | #9A2E20 | #EC8F7B | failures (icon + word) |
-| series | trend #5A171B solid, meanrev #A6422A long-dash, breakout #646548 dot-dash, buy-and-hold text colour dashed, cash #8A7560 dotted | lightened equivalents | every series also has a distinct dash pattern and a direct end label |
+| canvas | #EDE7DC | #0F0E0C | page |
+| raised | #F6F2EA | #191714 | figure plates |
+| sunken | #E2DACB | #080706 | table headers, inputs |
+| oat | #D3C8B5 | #2C2823 | hairlines, low heatmap cells |
+| text | #15130F ink | #EDE7DC | primary text |
+| text-2 | #514A40 | #B3AA9B | secondary text and micro labels |
+| border-strong | #7E7262 | #7A7062 | control boundaries (>= 3:1) |
+| action | ink, bone text | bone, ink text | primary buttons, segmented thumb |
+| pen | #A82E17 vermilion | #FF7052 | the referee mark, chapter numerals, links, the verdict line |
+| success / warning / danger | #48502E / #74500C / #A82E17 | #B5BC8C / #E3B65E / #FF8366 | always with icon + word |
+| series | trend pen solid, meanrev umber long-dash, breakout slate dot-dash, buy-and-hold ink dashed, cash grey dotted | lightened equivalents | every series also has a dash pattern and a direct end label |
 
-All listed text pairs were computed at >= 4.5:1 and all non-text boundaries at >= 3:1 on canvas,
-raised and sunken. Meaning is never carried by colour alone.
+`.qf-invert` swaps the two token sets locally (light theme: an ink band; dark theme: a bone band).
+Text pairs are >= 4.5:1 and non-text boundaries >= 3:1 in both sets; axe runs in both themes.
 
 ## Type
 
-- **Newsreader Variable** (optical sizes 6 to 72): headlines, prose, verdicts. Headline set at
-  large optical size, regular weight, tight leading; prose 17 px / 1.6 with a 68ch measure.
-- **IBM Plex Sans Condensed**: every number, table, axis, control and label, with tabular
-  figures. Condensed width is what lets the ledger and comparison stay dense on a phone.
-- No all-caps labels, no tracked-out eyebrows, no monospace label face, no single-word
-  accent colouring, no middle-dot meta strings, no arrows appended to link text.
-- Scale (px): 13, 15, 17, 21, 27, 36, 52 (desktop headline 52, mobile 34).
+- **Fraunces Variable** (optical size 9 to 144, OFL): display at opsz 144 with negative tracking
+  (hero 56 to 184 px, chapter titles 30 to 58 px, strategy names 30 to 76 px), prose at opsz 14,
+  18 px / 1.6, 64ch measure. The verdict line and chapter numerals use the italic.
+- **IBM Plex Sans Condensed**: every number, table, axis and control, with tabular figures, plus
+  uppercase micro labels (11 to 12 px, 0.14 to 0.18em tracking) for metadata, table headers and nav.
+- Two families only. Headings scale with clamp(); hero and outro wrap safely at 390 px.
 
 ## Layout
 
-- Desktop 1440: masthead; left "Contents" rail (sticky, 200 px) that tracks the current section;
-  report column on a 12-column grid, prose max 68ch, figures may span the full column; margin
-  notes sit in a right gutter beside the verdict.
-- Tablet 768: rail becomes a sticky "Contents" disclosure under the masthead; figures full width;
-  margin notes become indented notes under each struck strategy.
-- Mobile 390: compact masthead with a menu button; comparison table becomes one definition
-  block per strategy; ledger rows become two-line entries with expandable detail; charts get a
-  taller aspect ratio and the legend moves below as toggle buttons.
-- Left aligned throughout. Surfaces: radius 4 px on controls, 10 px on figure plates, none on
-  tables. No drop shadows except a faint one on popovers. A barely visible paper grain on the
-  canvas (static SVG noise, 3 % opacity, removed in forced-colors mode).
+- Desktop 1440: masthead (wordmark + uppercase nav, hides while reading down, returns on scroll up
+  or keyboard focus). Full-width hero: metadata strip, headline, then a 7/5 split of prose and
+  actions against four counted figures. The referee's verdict as full-width ruled rows
+  (number, struck name, margin note). Then a 200 px sticky "In this note" rail with numbered
+  entries beside the chapters. Footer ends in an oversized "Quant Foundry" wordmark.
+- Tablet 768: rail becomes a "Jump to a section" disclosure; hero foot stacks; margin notes sit
+  under each struck name; the ink band bleeds to both edges.
+- Mobile 390: menu button; two-column metadata; headline 50 to 60 px; stats in a 2 x 2 grid; tables
+  become definition blocks; chart legend wraps as toggle buttons.
+- Plates are crisp (3 px radius) with a cursor-lit border on fine pointers; buttons are pills.
+  Paper grain overlay at 5 % (removed in forced-colors mode).
 
-## Motion (all from the brief; durations in ms)
+## Motion (GSAP + ScrollTrigger + SplitText, Lenis on the standalone site only)
 
-| Moment | Treatment | Duration |
-|---|---|---|
-| Page entry (once per load) | headline lines rise 8 px and fade in, then each rejection strike draws left to right, then margin notes fade in | 240 + 60 stagger; strike 420; total under 1 s |
-| Chart series change | new path draws in (stroke-dashoffset), old fades out | 360 in, 180 out |
-| Drawdown toggle | area grows from the zero line (scaleY) | 280 |
-| Expand / collapse | grid-row 0fr to 1fr height transition, chevron rotates | 220 open, 160 close |
-| Nav state | current-section indicator slides along the rail (transform) | 200 |
-| Controls | press scale 0.98, background ease | 120 |
+| Layer | Treatment |
+|---|---|
+| Intro (once per load) | hero headline characters rise out of line masks (about 1 s), equity curves draw behind it, metadata and copy follow, the four figures count up |
+| Navigation | masthead hides on scroll down and returns on scroll up; nav underline slides; on in-app navigation the view's headline rises out of a mask and the body eases in |
+| Scroll storytelling | hero curves drift with scroll; chapter numerals parallax; each chapter title reveals line by line; the ink evidence band opens like a curtain; walk-forward bars grow; checklists slide in |
+| Component interaction | magnetic primary actions; cursor-lit plate borders; legend toggles; pill buttons invert on hover |
+| Data transitions | series draw in on toggle, drawdown grows from zero, cost estimates recompute live, figures count up |
+| Microinteractions | press scale, link underline weight, chevron rotation, rail marker slide |
 
-Easing: decelerate `cubic-bezier(.2,.7,.2,1)` for arrivals, accelerate `cubic-bezier(.4,0,1,1)`
-for exits. Reduced motion: every duration becomes 0 and draw-ins render final state. Content is
-never hidden waiting for animation; no scroll hijacking, no intro screen, no perpetual
-background motion, no hover-only controls.
+Rules: every tween is registered under `gsap.matchMedia("(prefers-reduced-motion: no-preference)")`
+so reduced motion reverts it live and shows final states; scroll reveals use
+`immediateRender: false` so content is never hidden while waiting for a trigger; cursor effects
+only on fine pointers and never gate content; Lenis and pointer effects attach only when the app
+owns the page (standalone, hash routing), never inside an embedding host.
 
 ## States (every data view)
 

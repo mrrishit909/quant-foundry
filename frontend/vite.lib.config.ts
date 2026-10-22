@@ -17,6 +17,7 @@ export default defineConfig({
     },
     rollupOptions: {
       external: ["react", "react-dom", "react-dom/client", "react/jsx-runtime"],
+      output: { inlineDynamicImports: true }, // hosts load one module file, motion chunk included
     },
   },
 });

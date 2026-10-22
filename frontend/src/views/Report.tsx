@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { EquityChart, Legend, SERIES } from "../charts/EquityChart";
 import { Disclosure, Segmented } from "../components/Controls";
 import { Icon, StatusIcon } from "../components/Icon";
@@ -7,7 +7,8 @@ import type { AppConfig } from "../config";
 import type { Metrics, RunBundle, Snapshot } from "../data/types";
 import { chainedOos, repriceCosts } from "../lib/costs";
 import { day, fixed, money, paramsText, pct, shortHash, signedPct, timestamp } from "../lib/format";
-import { prefersReducedMotion } from "../lib/motion";
+import { scrollToElement } from "../lib/scroll";
+import { useKinetic } from "../lib/useKinetic";
 import { routeHref } from "../routing";
 
 export const SECTIONS = [
@@ -27,7 +28,7 @@ type SectionId = (typeof SECTIONS)[number]["id"];
 function scrollToSection(id: SectionId) {
   const el = document.getElementById(`qf-sec-${id}`);
   if (!el) return;
-  el.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
+  scrollToElement(el);
   el.focus({ preventScroll: true });
 }
 
@@ -62,6 +63,7 @@ function Contents({ active, variant }: { active: SectionId; variant: "rail" | "s
                 scrollToSection(s.id);
               }}
             >
+              <span className="qf-toc-no" aria-hidden>{String(SECTIONS.indexOf(s) + 1).padStart(2, "0")}</span>
               {s.label}
             </a>
           </li>
@@ -77,7 +79,7 @@ function Contents({ active, variant }: { active: SectionId; variant: "rail" | "s
   }
   return (
     <nav aria-label="Report contents" className="qf-rail">
-      <p className="qf-rail-title">Contents</p>
+      <p className="qf-rail-title">In this note</p>
       <div style={{ position: "relative" }}>
         <span className="qf-toc-marker" aria-hidden style={{ transform: `translateY(${index * 31}px)` }} />
         {list}
@@ -86,10 +88,12 @@ function Contents({ active, variant }: { active: SectionId; variant: "rail" | "s
   );
 }
 
-function Section({ id, title, lede, children }: { id: SectionId; title: string; lede?: string; children: React.ReactNode }) {
+function Section({ id, title, lede, band, children }: { id: SectionId; title: string; lede?: string; band?: boolean; children: React.ReactNode }) {
+  const no = String(SECTIONS.findIndex((s) => s.id === id) + 1).padStart(2, "0");
   return (
-    <section className="qf-section" id={`qf-sec-${id}`} tabIndex={-1} aria-labelledby={`qf-h-${id}`}>
-      <div className="qf-section-head">
+    <section className={`qf-section qf-chapter${band ? " qf-invert qf-band" : ""}`} id={`qf-sec-${id}`} tabIndex={-1} aria-labelledby={`qf-h-${id}`}>
+      <div className="qf-section-head qf-chapter-head">
+        <span className="qf-chapter-no" aria-hidden>{no}</span>
         <h2 className="qf-h2" id={`qf-h-${id}`}>{title}</h2>
         {lede && <p className="qf-prose">{lede}</p>}
       </div>
@@ -108,6 +112,7 @@ function EquitySection({ run }: { run: RunBundle }) {
   return (
     <Section
       id="equity"
+      band
       title="Out-of-sample equity, then the sealed holdout"
       lede="Each walk-forward test window starts from 100,000 and the windows are chained by returns. The hatched span is the holdout: it was evaluated once, with parameters frozen before anyone saw it."
     >
@@ -346,7 +351,7 @@ function WalkForwardSection({ run }: { run: RunBundle }) {
       <div className="qf-plate" style={{ display: "grid", gap: 10 }}>
         <div className="qf-toolbar qf-small">
           <span><span style={{ display: "inline-block", width: 18, height: 10, background: "var(--qf-oat)", borderRadius: 2 }} /> training</span>
-          <span><span style={{ display: "inline-block", width: 18, height: 10, background: "var(--qf-action)", borderRadius: 2 }} /> test</span>
+          <span><span style={{ display: "inline-block", width: 18, height: 10, background: "var(--qf-pen)", borderRadius: 1 }} /> test</span>
           <span>hatched: sealed holdout</span>
         </div>
         {windows.map((w) => (
@@ -589,29 +594,65 @@ export function Report({ run, snapshot, config, focus }: { run: RunBundle; snaps
       requestAnimationFrame(() => scrollToSection(focus));
     }
   }, [focus]);
-  const p = run.manifest.params;
-  const meta = useMemo(
-    () =>
-      `Run ${run.record.run_id}, ${run.record.completed_at ? `completed ${day(run.record.completed_at)}` : "not completed"}. Synthetic data: seed ${p.dataset.seed}, ${p.dataset.symbols} symbols, ${p.dataset.days.toLocaleString("en-US")} trading days, ${p.dataset.regime_mix} regimes.`,
-    [run, p],
-  );
+  const rootRef = useRef<HTMLDivElement>(null);
+  useKinetic(({ gsap, MOTION_OK, revealLines }) => {
+    const root = rootRef.current;
+    if (!root) return;
+    const mm = gsap.matchMedia();
+    mm.add(MOTION_OK, () => {
+      root.querySelectorAll(".qf-chapter-head").forEach((head) => {
+        const h2 = head.querySelector("h2");
+        if (h2) revealLines(h2, { scroll: true });
+        gsap.fromTo(head.querySelector(".qf-chapter-no"), { yPercent: 35 }, {
+          yPercent: -35, ease: "none",
+          scrollTrigger: { trigger: head, start: "top bottom", end: "bottom top", scrub: true },
+        });
+      });
+      // The evidence band opens like a curtain as it arrives; its content is never clipped at rest.
+      root.querySelectorAll<HTMLElement>(".qf-band").forEach((band) => {
+        gsap.fromTo(band, { clipPath: "inset(7% 6% 7% 6% round 28px)" }, {
+          clipPath: "inset(0% 0% 0% 0% round 0px)", ease: "none",
+          scrollTrigger: { trigger: band, start: "top 95%", end: "top 35%", scrub: 0.6 },
+        });
+      });
+      gsap.from(root.querySelectorAll(".qf-window-bar > span"), {
+        scaleX: 0, transformOrigin: "left center", duration: 0.9, ease: "expo.out", stagger: 0.05,
+        immediateRender: false,
+        scrollTrigger: { trigger: "#qf-sec-walkforward .qf-plate", start: "top 85%", once: true },
+      });
+      gsap.from(root.querySelectorAll(".qf-checklist li"), {
+        x: -14, opacity: 0, duration: 0.6, ease: "power3.out", stagger: 0.04,
+        immediateRender: false,
+        scrollTrigger: { trigger: "#qf-sec-holdout", start: "top 80%", once: true },
+      });
+    });
+    return () => mm.revert();
+  }, [run.record.run_id]);
+  // "Read the evidence" and similar in-page jumps scroll instead of touching the hash route.
+  const onClick = (e: React.MouseEvent) => {
+    const a = (e.target as HTMLElement).closest<HTMLElement>("[data-scroll-to]");
+    if (!a) return;
+    e.preventDefault();
+    scrollToSection(a.dataset.scrollTo as SectionId);
+  };
   return (
-    <div className="qf-report">
-      <Contents active={active} variant="rail" />
-      <div className="qf-main">
-        <Contents active={active} variant="sheet" />
-        <section className="qf-section" id="qf-sec-verdict" tabIndex={-1} aria-label="Verdict">
-          <p className="qf-meta qf-wrap-anywhere">{meta}</p>
-          <Verdict run={run} />
-        </section>
-        <EquitySection run={run} />
-        <ComparisonSection run={run} />
-        <CostsSection run={run} />
-        <WalkForwardSection run={run} />
-        <HoldoutSection run={run} />
-        <QualitySection run={run} />
-        <AssumptionsSection run={run} />
-        <ProvenanceSection run={run} snapshot={snapshot} config={config} />
+    <div className="qf-report" ref={rootRef} onClick={onClick}>
+      <section className="qf-section qf-hero-section" id="qf-sec-verdict" tabIndex={-1} aria-label="Verdict">
+        <Verdict run={run} />
+      </section>
+      <div className="qf-report-body">
+        <Contents active={active} variant="rail" />
+        <div className="qf-main">
+          <Contents active={active} variant="sheet" />
+          <EquitySection run={run} />
+          <ComparisonSection run={run} />
+          <CostsSection run={run} />
+          <WalkForwardSection run={run} />
+          <HoldoutSection run={run} />
+          <QualitySection run={run} />
+          <AssumptionsSection run={run} />
+          <ProvenanceSection run={run} snapshot={snapshot} config={config} />
+        </div>
       </div>
     </div>
   );
