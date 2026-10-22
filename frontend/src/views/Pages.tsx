@@ -25,7 +25,7 @@ export function RequestView({ config }: { config: AppConfig }) {
         <h2 className="qf-h2" id="qf-req-next">What happens after you submit</h2>
         <ol className="qf-steps">
           <li><p className="qf-prose">The intake workflow checks every field against the request schema and labels the issue requested, or blocked with the reason.</p></li>
-          <li><p className="qf-prose">If the same parameters were already run, the issue links the existing run instead of computing again.</p></li>
+          <li><p className="qf-prose">If the same parameters were already run on the current engine, the issue links the existing run instead of computing again.</p></li>
           <li><p className="qf-prose">The run computes on a GitHub-hosted runner (usually under five minutes), its outputs are validated, then written to the state branch.</p></li>
           <li><p className="qf-prose">The site redeploys with the new run and the issue gets a link to it, completed or failed, with the evidence kept either way.</p></li>
         </ol>
