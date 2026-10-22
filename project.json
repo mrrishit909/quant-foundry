@@ -1,0 +1,45 @@
+{
+  "project": "quant-foundry",
+  "display_name": "Quant Foundry",
+  "owner": "mrrishit909",
+  "repo": "quant-foundry",
+  "pages_url": "https://mrrishit909.github.io/quant-foundry/",
+  "schema_version": "1.0",
+  "package": "quantfoundry",
+  "state_branch": "state",
+  "limits": {
+    "max_runs_per_month": 40,
+    "max_open_requests": 5,
+    "max_run_bytes": 2000000,
+    "max_retained_run_dirs": 30,
+    "max_index_entries": 500,
+    "max_snapshot_runs": 8,
+    "compute_timeout_minutes": 20,
+    "stale_running_minutes": 90,
+    "max_repair_rounds": 3,
+    "inference_budget_usd": 1.0,
+    "max_reconcile_actions": 5
+  },
+  "form": [
+    {"label": "Seed", "param": "dataset.seed", "type": "int"},
+    {"label": "Symbols", "param": "dataset.symbols", "type": "int"},
+    {"label": "Trading days", "param": "dataset.days", "type": "int"},
+    {"label": "Regime mix", "param": "dataset.regime_mix", "type": "str"},
+    {"label": "Strategies", "param": "strategies", "type": "checkbox_list",
+     "choices": {"Trend following": "trend", "Mean reversion": "meanrev", "Volatility breakout": "breakout"}},
+    {"label": "Fee (bps)", "param": "costs.fee_bps", "type": "float"},
+    {"label": "Slippage (bps)", "param": "costs.slippage_bps", "type": "float"},
+    {"label": "Walk-forward train days", "param": "walk_forward.train_days", "type": "int"},
+    {"label": "Walk-forward test days", "param": "walk_forward.test_days", "type": "int"},
+    {"label": "Holdout fraction", "param": "holdout_fraction", "type": "float"}
+  ],
+  "constants": {"dataset.kind": "synthetic", "allow_short": false},
+  "scheduled_request": {
+    "dataset": {"kind": "synthetic", "seed": "iso_week", "symbols": 6, "days": 1512, "regime_mix": "balanced"},
+    "strategies": ["trend", "meanrev", "breakout"],
+    "costs": {"fee_bps": 1.0, "slippage_bps": 5.0},
+    "walk_forward": {"train_days": 504, "test_days": 126},
+    "holdout_fraction": 0.2,
+    "allow_short": false
+  }
+}

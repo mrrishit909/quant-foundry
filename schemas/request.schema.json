@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "request.schema.json",
+  "title": "Quant Foundry run request parameters",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["dataset", "strategies", "costs", "walk_forward", "holdout_fraction", "allow_short"],
+  "properties": {
+    "dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "seed", "symbols", "days", "regime_mix"],
+      "properties": {
+        "kind": {"const": "synthetic"},
+        "seed": {"type": "integer", "minimum": 0, "maximum": 2147483647},
+        "symbols": {"type": "integer", "minimum": 2, "maximum": 10},
+        "days": {"type": "integer", "minimum": 756, "maximum": 2520},
+        "regime_mix": {"enum": ["balanced", "trending", "choppy", "volatile"]}
+      }
+    },
+    "strategies": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "uniqueItems": true,
+      "items": {"enum": ["trend", "meanrev", "breakout"]}
+    },
+    "costs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fee_bps", "slippage_bps"],
+      "properties": {
+        "fee_bps": {"type": "number", "minimum": 0, "maximum": 50},
+        "slippage_bps": {"type": "number", "minimum": 0, "maximum": 100}
+      }
+    },
+    "walk_forward": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["train_days", "test_days"],
+      "properties": {
+        "train_days": {"type": "integer", "minimum": 252, "maximum": 756},
+        "test_days": {"type": "integer", "minimum": 63, "maximum": 252}
+      }
+    },
+    "holdout_fraction": {"type": "number", "minimum": 0.1, "maximum": 0.3},
+    "allow_short": {"const": false}
+  }
+}

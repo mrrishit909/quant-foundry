@@ -1,0 +1,79 @@
+name: Research run request
+description: Ask for a deterministic backtest run on synthetic data. Runs start automatically only for the repository owner; other requests wait for owner approval.
+title: "[run] "
+labels: ["type:run"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every value is validated against `schemas/request.schema.json`. Runs use synthetic market data only, are recorded even when every strategy fails, and never place orders. A GitHub sign-in is required to open an issue. Nothing here can trigger paid AI inference.
+  - type: input
+    attributes:
+      label: Seed
+      description: Whole number 0 to 2147483647. The same seed always produces the same market.
+      placeholder: "7"
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Symbols
+      options: ["4", "6", "8"]
+      default: 1
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Trading days
+      options: ["1008", "1512", "2016"]
+      default: 1
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Regime mix
+      options: ["balanced", "trending", "choppy", "volatile"]
+      default: 0
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Strategies
+      options:
+        - label: Trend following
+        - label: Mean reversion
+        - label: Volatility breakout
+  - type: dropdown
+    attributes:
+      label: Fee (bps)
+      options: ["0", "1", "5", "10"]
+      default: 1
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Slippage (bps)
+      options: ["0", "5", "10", "25"]
+      default: 1
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Walk-forward train days
+      options: ["252", "504"]
+      default: 1
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Walk-forward test days
+      options: ["63", "126"]
+      default: 1
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Holdout fraction
+      options: ["0.2", "0.25"]
+      default: 0
+    validations:
+      required: true

@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Explore published results
+    url: https://mrrishit909.github.io/quant-foundry/
+    about: Every completed run, including rejected strategies, is browsable without signing in.

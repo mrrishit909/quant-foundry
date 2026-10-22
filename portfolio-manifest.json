@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "name": "Quant Foundry",
+  "short_description": "An adversarial backtesting lab: walk-forward selection, a sealed holdout, explicit costs and published rejections, on synthetic markets.",
+  "repository_url": "https://github.com/mrrishit909/quant-foundry",
+  "live_url": "https://mrrishit909.github.io/quant-foundry/",
+  "preview_image": "https://mrrishit909.github.io/quant-foundry/preview.jpg",
+  "tags": ["python", "pandas", "numpy", "backtesting", "walk-forward", "github-actions", "react", "typescript", "data-visualization"],
+  "capabilities": [
+    "Deterministic synthetic market generator with validation and content hashes",
+    "Event-driven simulator: next-open fills, fees, slippage, position limits, reconciled accounting",
+    "Walk-forward parameter selection with a sealed, evaluate-once holdout and a cross-run holdout audit",
+    "Parameter sensitivity, benchmarks and explicit accept/reject verdicts with reasons",
+    "GitHub-native run ledger: issue intake, idempotent admission, state branch, reconciler",
+    "Outcome Verification Loop and Memory Curation Workflow running in GitHub Actions",
+    "Static, embeddable research report with an in-browser cost sensitivity estimate"
+  ],
+  "data_limitations": [
+    "All market data is synthetic; results do not describe any real exchange or asset",
+    "Mon-Fri calendar without holidays, corporate actions or market impact beyond fixed slippage",
+    "Long only, three strategy families, small parameter grids",
+    "The site shows a snapshot of the state branch, not live data"
+  ],
+  "integration": {
+    "standalone": "https://mrrishit909.github.io/quant-foundry/",
+    "iframe": "https://mrrishit909.github.io/quant-foundry/#/",
+    "module": "https://mrrishit909.github.io/quant-foundry/lib/quant-foundry.js",
+    "stylesheet": "https://mrrishit909.github.io/quant-foundry/lib/quant-foundry.css",
+    "entry_point": "QuantFoundryApp (React component) or mount(element, config)",
+    "data_url": "https://mrrishit909.github.io/quant-foundry/data/",
+    "docs": "https://github.com/mrrishit909/quant-foundry/blob/main/docs/PORTFOLIO_INTEGRATION.md"
+  },
+  "build_version": "1.0.0"
+}
