@@ -38,7 +38,8 @@ async function axe(page: Page) {
   // @axe-core/playwright is typed against its own Playwright Page version; the runtime object is the same.
   const results = await new AxeBuilder({ page: page as never }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();
   const serious = results.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
-  expect(serious.map((v) => `${v.id}: ${v.nodes.length} node(s)`)).toEqual([]);
+  // Name every failing element and axe's reason so a CI-only failure can be diagnosed from the log alone.
+  expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => `${n.target.join(" ")} (${(n.failureSummary ?? "").replace(/\s+/g, " ").slice(0, 160)})`).join("; ")}`)).toEqual([]);
 }
 
 test("report: verdict, chart, comparison, no overflow, accessible", async ({ page }) => {
@@ -140,6 +141,20 @@ test("navigation: current page state, runs ledger, back button, request link", a
   await expect(page.locator("h1")).toContainText("Method");
   await noOverflow(page);
   expect(problems).toEqual([]);
+});
+
+test("dark theme: report and request pages stay accessible", async ({ page }) => {
+  await page.goto("./");
+  await page.getByRole("group", { name: "Colour theme" }).getByRole("button", { name: "Dark" }).click();
+  await page.waitForTimeout(500); // theme transitions settle before the audit
+  await expect(page.locator(".qf-root")).toHaveAttribute("data-theme", "dark");
+  await axe(page);
+  await shot(page, "dark", false);
+  await page.goto("./#/request");
+  await axe(page);
+  // axe reports identical text and background colours as incomplete, not as a violation; check the primary action directly.
+  const [fg, bg] = await page.locator(".qf-btn-primary").first().evaluate((el) => [getComputedStyle(el).color, getComputedStyle(el).backgroundColor]);
+  expect(fg).not.toBe(bg);
 });
 
 test("keyboard: skip link and visible focus", async ({ page }) => {
