@@ -21,7 +21,7 @@ on:
         type: string
         default: ""
 
-run-name: Run (${{ inputs.source_type }}${{ inputs.issue && format(' #{0}', inputs.issue) || '' }})
+run-name: "Run (${{ inputs.source_type }}${{ inputs.issue && format(', issue {0}', inputs.issue) || '' }})"
 
 permissions: {}
 
@@ -179,7 +179,7 @@ jobs:
     secrets: inherit
 
   memory:
-    needs: verify
+    needs: [deploy, verify]
     if: always() && needs.deploy.result == 'success'
     uses: ./.github/workflows/memory.yml
     permissions:
