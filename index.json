@@ -2,6 +2,17 @@
   "runs": [
     {
       "attempt": 1,
+      "completed_at": null,
+      "created_at": "2026-10-22T00:16:35Z",
+      "headline": null,
+      "issue": 1,
+      "request_id": "506f9557952c848e",
+      "run_id": "quant-foundry-20261022T001635Z-506f9557-a1",
+      "source": "issue",
+      "status": "running"
+    },
+    {
+      "attempt": 1,
       "completed_at": "2026-10-22T00:11:58Z",
       "created_at": "2026-10-22T00:11:25Z",
       "headline": "All 3 strategies were rejected on this synthetic dataset: no strategy cleared every out-of-sample, benchmark, holdout, stability and trade-count check.",

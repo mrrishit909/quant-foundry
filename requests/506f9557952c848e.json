@@ -1,0 +1,12 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "run_id": "quant-foundry-20261022T001635Z-506f9557-a1",
+      "status": "running"
+    }
+  ],
+  "latest_status": "running",
+  "params_hash": "sha256:78a95da788c35e4ee829374aaddfe8fbf53e0323be39f32ffcf67ebf224d8126",
+  "request_id": "506f9557952c848e"
+}
