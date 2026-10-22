@@ -1,0 +1,142 @@
+{
+  "strategies": [
+    {
+      "description": "Long while SMA(fast) of closes is above SMA(slow), otherwise flat.",
+      "id": "trend",
+      "long_only": true,
+      "name": "Trend following (SMA crossover)",
+      "params_grid": [
+        {
+          "fast": 10,
+          "slow": 50
+        },
+        {
+          "fast": 10,
+          "slow": 100
+        },
+        {
+          "fast": 10,
+          "slow": 200
+        },
+        {
+          "fast": 20,
+          "slow": 50
+        },
+        {
+          "fast": 20,
+          "slow": 100
+        },
+        {
+          "fast": 20,
+          "slow": 200
+        },
+        {
+          "fast": 40,
+          "slow": 50
+        },
+        {
+          "fast": 40,
+          "slow": 100
+        },
+        {
+          "fast": 40,
+          "slow": 200
+        }
+      ],
+      "signal_timing": "computed from bars up to and including the close of day t; the resulting order fills at the open of day t+1",
+      "warmup_rule": "slow bars: SMA(slow) needs slow closes"
+    },
+    {
+      "description": "z = (close - rolling mean) / rolling std over lookback closes. Enter long when z < -entry_z, exit when z >= 0.",
+      "id": "meanrev",
+      "long_only": true,
+      "name": "Mean reversion (z-score)",
+      "params_grid": [
+        {
+          "entry_z": 1.0,
+          "lookback": 10
+        },
+        {
+          "entry_z": 1.5,
+          "lookback": 10
+        },
+        {
+          "entry_z": 2.0,
+          "lookback": 10
+        },
+        {
+          "entry_z": 1.0,
+          "lookback": 20
+        },
+        {
+          "entry_z": 1.5,
+          "lookback": 20
+        },
+        {
+          "entry_z": 2.0,
+          "lookback": 20
+        },
+        {
+          "entry_z": 1.0,
+          "lookback": 40
+        },
+        {
+          "entry_z": 1.5,
+          "lookback": 40
+        },
+        {
+          "entry_z": 2.0,
+          "lookback": 40
+        }
+      ],
+      "signal_timing": "computed from bars up to and including the close of day t; the resulting order fills at the open of day t+1",
+      "warmup_rule": "lookback bars: rolling mean and std need lookback closes"
+    },
+    {
+      "description": "Enter long when close > highest high of the previous N bars + k * ATR(N) of the previous N bars. Exit when close < lowest low of the previous N // 2 bars.",
+      "id": "breakout",
+      "long_only": true,
+      "name": "Volatility breakout",
+      "params_grid": [
+        {
+          "N": 20,
+          "k": 0.0
+        },
+        {
+          "N": 20,
+          "k": 0.5
+        },
+        {
+          "N": 20,
+          "k": 1.0
+        },
+        {
+          "N": 55,
+          "k": 0.0
+        },
+        {
+          "N": 55,
+          "k": 0.5
+        },
+        {
+          "N": 55,
+          "k": 1.0
+        },
+        {
+          "N": 100,
+          "k": 0.0
+        },
+        {
+          "N": 100,
+          "k": 0.5
+        },
+        {
+          "N": 100,
+          "k": 1.0
+        }
+      ],
+      "signal_timing": "computed from bars up to and including the close of day t; the resulting order fills at the open of day t+1",
+      "warmup_rule": "N + 1 bars: channel and ATR use the N bars before the signal bar"
+    }
+  ]
+}
