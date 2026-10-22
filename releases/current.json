@@ -1,8 +1,8 @@
 {
   "blocked_reason": null,
-  "created_at": "2026-10-22T00:14:23Z",
+  "created_at": "2026-10-22T00:20:12Z",
   "defect_batch_id": null,
-  "evidence_dir": "outcomes/quant-foundry-20261022T001423Z-aa69502/",
+  "evidence_dir": "outcomes/quant-foundry-20261022T002012Z-666d58d/",
   "findings": [
     {
       "detail": "sha256:611cedc127a33d4caa091a1b22d068e609a4de3f245536dae8b429978ed43adf",
@@ -23,12 +23,12 @@
       "id": "research-gates",
       "kind": "pytest",
       "objective": true,
-      "seconds": 9.57,
+      "seconds": 9.48,
       "status": "pass",
       "title": "Accounting reconciles, known scenarios, no lookahead, deterministic replay, costs included, all experiments recorded, rejected strategies visible, holdout sealed"
     },
     {
-      "detail": ".........................                                                [100%]",
+      "detail": "...........................                                              [100%]",
       "evidence_paths": [
         "harness.junit.xml",
         "harness.log"
@@ -36,7 +36,7 @@
       "id": "harness",
       "kind": "pytest",
       "objective": true,
-      "seconds": 2.5,
+      "seconds": 3.34,
       "status": "pass",
       "title": "State machine, idempotency, concurrency, intake authorization, outcome and memory guards"
     },
@@ -48,7 +48,7 @@
       "id": "secret-scan",
       "kind": "command",
       "objective": true,
-      "seconds": 0.63,
+      "seconds": 0.5,
       "status": "pass",
       "title": "No credentials in the repository or in the live site's shipped assets"
     },
@@ -60,19 +60,19 @@
       "id": "live-site",
       "kind": "live",
       "objective": true,
-      "seconds": 0.18,
+      "seconds": 0.17,
       "status": "pass",
       "title": "Live Pages site loads and its data snapshot points at the state branch's latest run"
     },
     {
-      "detail": "checked 15 published files for quant-foundry-20261022T001125Z-af1cc9ea-a1; mismatches: none",
+      "detail": "checked 15 published files for quant-foundry-20261022T001654Z-532d7d85-a1; mismatches: none",
       "evidence_paths": [
         "published-matches-state.log"
       ],
       "id": "published-matches-state",
       "kind": "command",
       "objective": true,
-      "seconds": 1.99,
+      "seconds": 1.61,
       "status": "pass",
       "title": "Published result files are byte-identical to the accepted computation"
     },
@@ -90,16 +90,16 @@
     }
   ],
   "project": "quant-foundry",
-  "release_id": "quant-foundry-20261022T001423Z-aa69502",
+  "release_id": "quant-foundry-20261022T002012Z-666d58d",
   "repair_round": 0,
   "rubric_sha256": "sha256:611cedc127a33d4caa091a1b22d068e609a4de3f245536dae8b429978ed43adf",
-  "run_id": "quant-foundry-20261022T001125Z-af1cc9ea-a1",
-  "source_commit": "aa69502603e209aac06748222e51853a3da83da4",
+  "run_id": "quant-foundry-20261022T001654Z-532d7d85-a1",
+  "source_commit": "666d58dd59d3f08de9f3619fac0d1da97bafd36d",
   "status": "released",
   "subjective": {
     "reason": "inference credentials are not configured for this repository",
     "scores": [],
     "status": "not_run"
   },
-  "workflow_run_url": "https://github.com/mrrishit909/quant-foundry/actions/runs/39698151155"
+  "workflow_run_url": "https://github.com/mrrishit909/quant-foundry/actions/runs/39698689692"
 }
