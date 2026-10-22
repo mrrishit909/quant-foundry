@@ -1,0 +1,182 @@
+{
+  "benchmarks": {
+    "buyhold": {
+      "holdout": {
+        "cagr": 0.08751034198,
+        "exposure": 0.9996195129,
+        "fees_paid": 9.994910108,
+        "max_drawdown": -0.1526340655,
+        "sharpe": 0.6536430043,
+        "slippage_paid": 49.94957575,
+        "total_return": 0.1057634841,
+        "trades": 6,
+        "turnover": 0.9994910108,
+        "volatility": 0.1442120329
+      },
+      "oos": {
+        "cagr": -0.04691566336,
+        "exposure": 0.9994539091,
+        "fees_paid": 9.993732939,
+        "max_drawdown": -0.1587642538,
+        "sharpe": -0.3583543403,
+        "slippage_paid": 49.94369285,
+        "total_return": -0.09163024726,
+        "trades": 6,
+        "turnover": 0.9993732939,
+        "volatility": 0.1154911946
+      }
+    },
+    "cash": {
+      "holdout": {
+        "cagr": 0.0,
+        "exposure": 0.0,
+        "fees_paid": 0.0,
+        "max_drawdown": 0.0,
+        "sharpe": 0.0,
+        "slippage_paid": 0.0,
+        "total_return": 0.0,
+        "trades": 0,
+        "turnover": 0.0,
+        "volatility": 0.0
+      },
+      "oos": {
+        "cagr": 0.0,
+        "exposure": 0.0,
+        "fees_paid": 0.0,
+        "max_drawdown": 0.0,
+        "sharpe": 0.0,
+        "slippage_paid": 0.0,
+        "total_return": 0.0,
+        "trades": 0,
+        "turnover": 0.0,
+        "volatility": 0.0
+      }
+    }
+  },
+  "generated_by": "quantfoundry 1.0.0",
+  "strategies": [
+    {
+      "chosen_rank": 2,
+      "frozen_params": {
+        "fast": 40,
+        "slow": 200
+      },
+      "holdout_metrics": {
+        "cagr": -0.009893244653,
+        "exposure": 0.6328953754,
+        "fees_paid": 46.37492725,
+        "max_drawdown": -0.137880356,
+        "sharpe": 0.01281482219,
+        "slippage_paid": 231.8497323,
+        "total_return": -0.0118445226,
+        "trades": 24,
+        "turnover": 4.628162935,
+        "volatility": 0.154894463
+      },
+      "id": "trend",
+      "name": "Trend following (SMA crossover)",
+      "oos_metrics": {
+        "cagr": -0.1690772902,
+        "exposure": 0.6959194244,
+        "fees_paid": 204.2781056,
+        "max_drawdown": -0.3333601501,
+        "sharpe": -1.56328294,
+        "slippage_paid": 1021.318685,
+        "total_return": -0.3095674504,
+        "trades": 112,
+        "turnover": 21.30382609,
+        "volatility": 0.1142672895
+      },
+      "reasons": [
+        "OOS Sharpe -1.56 does not clear the 0.30 bar",
+        "OOS Sharpe -1.56 does not beat buy-and-hold OOS Sharpe -0.36",
+        "Holdout total return -1.18% is not positive"
+      ],
+      "stability": 0.3333333333,
+      "verdict": "rejected"
+    },
+    {
+      "chosen_rank": 3,
+      "frozen_params": {
+        "entry_z": 2.0,
+        "lookback": 40
+      },
+      "holdout_metrics": {
+        "cagr": 0.0006716424161,
+        "exposure": 0.3599632882,
+        "fees_paid": 98.53922252,
+        "max_drawdown": -0.1282754433,
+        "sharpe": 0.05085415614,
+        "slippage_paid": 492.6839352,
+        "total_return": 0.0008049584223,
+        "trades": 41,
+        "turnover": 9.676295157,
+        "volatility": 0.08642373034
+      },
+      "id": "meanrev",
+      "name": "Mean reversion (z-score)",
+      "oos_metrics": {
+        "cagr": -0.0279476982,
+        "exposure": 0.3867749722,
+        "fees_paid": 184.6990911,
+        "max_drawdown": -0.2446653354,
+        "sharpe": -0.2307793031,
+        "slippage_paid": 923.4578726,
+        "total_return": -0.05511432256,
+        "trades": 81,
+        "turnover": 18.58770116,
+        "volatility": 0.1008322468
+      },
+      "reasons": [
+        "OOS Sharpe -0.23 does not clear the 0.30 bar"
+      ],
+      "stability": 0.6666666667,
+      "verdict": "rejected"
+    },
+    {
+      "chosen_rank": 2,
+      "frozen_params": {
+        "N": 100,
+        "k": 1.0
+      },
+      "holdout_metrics": {
+        "cagr": -0.07288442895,
+        "exposure": 0.328386321,
+        "fees_paid": 21.73895672,
+        "max_drawdown": -0.171019405,
+        "sharpe": -0.6666380678,
+        "slippage_paid": 108.6758171,
+        "total_return": -0.08670134374,
+        "trades": 12,
+        "turnover": 2.300762527,
+        "volatility": 0.1052193977
+      },
+      "id": "breakout",
+      "name": "Volatility breakout",
+      "oos_metrics": {
+        "cagr": -0.009614782099,
+        "exposure": 0.1497438131,
+        "fees_paid": 23.82030017,
+        "max_drawdown": -0.1075227847,
+        "sharpe": -0.1180186658,
+        "slippage_paid": 119.0861181,
+        "total_return": -0.01913712016,
+        "trades": 11,
+        "turnover": 2.423382589,
+        "volatility": 0.06434178164
+      },
+      "reasons": [
+        "OOS Sharpe -0.12 does not clear the 0.30 bar",
+        "Holdout total return -8.67% is not positive",
+        "Parameter stability 0.22 is below the 0.30 bar (2 of 9 combos within 0.5 Sharpe of the best)"
+      ],
+      "stability": 0.2222222222,
+      "verdict": "rejected"
+    }
+  ],
+  "summary": {
+    "accepted": 0,
+    "headline": "All 3 strategies were rejected on this synthetic dataset: no strategy cleared every out-of-sample, benchmark, holdout, stability and trade-count check.",
+    "rejected": 3
+  }
+}

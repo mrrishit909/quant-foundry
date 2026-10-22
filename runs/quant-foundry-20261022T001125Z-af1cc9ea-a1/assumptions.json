@@ -1,0 +1,72 @@
+{
+  "calendar": {
+    "holidays": false,
+    "kind": "synthetic_business_days",
+    "text": "Synthetic Monday to Friday business days from 2015-01-02 with no exchange holidays."
+  },
+  "cash": {
+    "initial": 100000.0,
+    "interest_rate": 0.0,
+    "leverage": false,
+    "text": "Each backtest starts with 100,000 in cash. Cash earns 0. No leverage: a buy that cash cannot cover (including its fee) is reduced to the whole shares cash covers."
+  },
+  "equity_chaining": {
+    "text": "equity.csv shows the chained OOS curve and then continues into the holdout by chaining holdout returns onto the last OOS value. Dates between the last OOS window and the holdout start (if any) are not part of either curve."
+  },
+  "fees": {
+    "fee_bps": 1.0,
+    "model": "proportional",
+    "text": "Fee = 1.0 bps of absolute traded notional, paid in cash on every fill."
+  },
+  "fill_timing": {
+    "rule": "next_open",
+    "text": "Orders fill at the open of the next bar (t+1). A window's first open is driven by the state at the close of the bar before the window."
+  },
+  "holdout_split": {
+    "rounding": "floor",
+    "text": "The last floor(days * holdout_fraction) dates are the sealed holdout, evaluated once per strategy with parameters frozen from the last walk-forward window."
+  },
+  "metrics": {
+    "text": "Daily simple returns; 252 trading days per year; Sharpe = mean / std (ddof=1) * sqrt(252) with rf = 0 and 0.0 for a flat curve; max_drawdown is a negative fraction; turnover = sum of daily traded notional / previous close equity; exposure = mean gross weight at the close; stitched fees and slippage are summed over segments, each run on the initial cash.",
+    "trading_days_per_year": 252
+  },
+  "missing_data": {
+    "rule": "defer_and_mark_last_close",
+    "text": "A missing bar (NaN) cannot be traded: its order is deferred to the symbol's next valid open, the position is marked at the last valid close, and each such day is recorded in checks.json. Signals are computed on the symbol's valid bars only and the last state is carried across the gap."
+  },
+  "position_limits": {
+    "allocation": "equal_weight_among_long",
+    "max_gross_exposure": 1.0,
+    "max_weight_per_symbol": 0.25,
+    "text": "Equal weight among symbols currently long, capped at 0.25 per symbol, so gross exposure is at most 1.0. Targets are sized at the signal close: floor(weight * equity / close)."
+  },
+  "rebalance": {
+    "resize_band": 0.1,
+    "rule": "on_long_set_change",
+    "text": "Targets are recomputed only when the set of long symbols changes. Entries and exits always execute; a symbol that stays long is resized to the new equal weight only if its share count is more than 10% off target. No calendar rebalancing. Sells execute before buys at the same open."
+  },
+  "share_rounding": {
+    "rule": "floor",
+    "text": "Whole shares only, rounded down."
+  },
+  "shorting": {
+    "supported": false,
+    "text": "Short selling is not supported; allow_short must be false."
+  },
+  "signal_timing": {
+    "rule": "close_of_day_t",
+    "text": "computed from bars up to and including the close of day t; the resulting order fills at the open of day t+1"
+  },
+  "slippage": {
+    "model": "fixed_bps_adverse",
+    "slippage_bps": 5.0,
+    "text": "Fixed adverse slippage of 5.0 bps: buys fill at open * (1 + s), sells at open * (1 - s). It is embedded in fill prices and also reported separately as sum(|fill - open| * qty). No other market impact is modelled."
+  },
+  "warmup": {
+    "prefix_bars": 200,
+    "text": "The first 200 development bars (the largest warm-up in the registry) are never evaluated; they prime indicators. Each backtest computes signals from all bars before its start, never from bars after it. A strategy is flat until its own warm-up is complete."
+  },
+  "window_boundaries": {
+    "text": "Each walk-forward backtest starts flat with the initial cash. Positions open at a window's end are marked at that close and not charged an exit; the next window starts flat, so a position held across a boundary pays entry costs again. OOS segments are contiguous and chained by returns."
+  }
+}

@@ -1,10 +1,12 @@
 {
   "attempt": 1,
-  "completed_at": null,
+  "completed_at": "2026-10-22T00:11:58Z",
   "created_at": "2026-10-22T00:11:25Z",
   "error_summary": null,
-  "evidence_paths": [],
-  "input_manifest_hash": null,
+  "evidence_paths": [
+    "https://github.com/mrrishit909/quant-foundry/actions/runs/39698151155"
+  ],
+  "input_manifest_hash": "sha256:76b6110483ef4665bb5d4e2a7e3d1994fd6dbde6e9bb848f4c15ec8911a0673b",
   "parent_run_id": null,
   "project": "quant-foundry",
   "request_id": "af1cc9ea367df336",
@@ -18,14 +20,31 @@
       "usd": null,
       "used": false
     },
-    "output_bytes": null,
-    "wall_seconds": null
+    "output_bytes": 360155,
+    "wall_seconds": 33.0
   },
-  "result_paths": [],
+  "result_paths": [
+    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/assumptions.json",
+    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/benchmarks.json",
+    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/checks.json",
+    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/data_quality.json",
+    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/dataset.csv.gz",
+    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/equity.csv",
+    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/experiments.csv",
+    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/holdout.json",
+    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/manifest.json",
+    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/report.md",
+    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/results.json",
+    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/sensitivity.json",
+    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/strategies.json",
+    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/trades.csv",
+    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/walkforward.json",
+    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/holdout_audit.json"
+  ],
   "run_id": "quant-foundry-20261022T001125Z-af1cc9ea-a1",
   "schema_version": "1.0",
   "source_commit": "aa69502603e209aac06748222e51853a3da83da4",
   "started_at": "2026-10-22T00:11:25Z",
-  "status": "running",
+  "status": "completed",
   "workflow_run_id": 39698151155
 }
