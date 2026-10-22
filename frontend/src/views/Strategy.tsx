@@ -206,7 +206,7 @@ export function StrategyView({ run, strategyId }: { run: RunBundle; strategyId: 
                   <dt>Sharpe</dt><dd className="qf-num">{fixed(combo.metrics.sharpe)}</dd>
                   <dt>Return</dt><dd className="qf-num">{signedPct(combo.metrics.total_return)}</dd>
                   <dt>Max drawdown</dt><dd className="qf-num">{pct(combo.metrics.max_drawdown)}</dd>
-                  <dt>Trades</dt><dd className="qf-num">{combo.metrics.trades}</dd>
+                  <dt>Fills</dt><dd className="qf-num">{combo.metrics.trades}</dd>
                   <dt>Turnover</dt><dd className="qf-num">{fixed(combo.metrics.turnover, 1)}</dd>
                   <dt>Costs paid</dt><dd className="qf-num">{money(combo.metrics.fees_paid + combo.metrics.slippage_paid)}</dd>
                 </dl>
@@ -226,7 +226,7 @@ export function StrategyView({ run, strategyId }: { run: RunBundle; strategyId: 
           <table className="qf-table">
             <caption className="qf-sr-only">In-sample and out-of-sample results per window</caption>
             <thead>
-              <tr><th scope="col">Window</th><th scope="col">Chosen on training data</th><th scope="col">In-sample Sharpe</th><th scope="col">Test Sharpe</th><th scope="col">Test return</th><th scope="col">Test trades</th></tr>
+              <tr><th scope="col">Window</th><th scope="col">Chosen on training data</th><th scope="col">In-sample Sharpe</th><th scope="col">Test Sharpe</th><th scope="col">Test return</th><th scope="col">Test fills</th></tr>
             </thead>
             <tbody>
               {windows.map((w) => (

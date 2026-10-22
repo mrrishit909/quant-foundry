@@ -1,6 +1,8 @@
 """Synthetic generator, bounded ingestion and data validation."""
 
 import hashlib
+import json
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -61,6 +63,12 @@ def test_generator_calendar_names_and_defects():
 def test_generator_rejects_out_of_bounds(symbols, days, mix):
     with pytest.raises(ValueError):
         synthetic.generate(1, symbols, days, mix)
+
+
+def test_generator_scale_window_matches_schema_max_holdout():
+    schema = json.loads((Path(__file__).resolve().parents[2] / "schemas" / "request.schema.json").read_text())
+    # synthetic._symbol_bars rescales from bars before days - floor(0.3 * days)
+    assert schema["properties"]["holdout_fraction"]["maximum"] == 0.3
 
 
 def test_ingest_canonicalizes_and_hashes(tmp_path):

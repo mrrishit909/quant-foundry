@@ -78,8 +78,8 @@ export function Verdict({ run }: { run: RunBundle }) {
       </h1>
       <p className="qf-prose" data-enter>
         {summary.headline} A strategy is accepted only if it clears every check: out-of-sample Sharpe above 0.30
-        and above buy-and-hold, a positive sealed holdout, a stable parameter neighbourhood, and at least ten
-        trades.
+        with a t-statistic of at least 2 and above buy-and-hold, a positive sealed holdout after selling everything
+        at its last close, a stable parameter neighbourhood, and at least ten completed round trips.
       </p>
       <ol className="qf-verdict-list" aria-label="Verdict per strategy">
         {strategies.map((s, i) => {

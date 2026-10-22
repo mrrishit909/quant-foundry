@@ -35,12 +35,9 @@ def compute(params: dict[str, Any], out_dir: Path) -> None:
 
 def request_problems(params: dict[str, Any]) -> list[str]:
     """Feasibility beyond the schema: one walk-forward window must fit in the development period."""
-    import math
+    from quantfoundry.research.protocol import WARMUP_PREFIX, holdout_start_index
 
-    from quantfoundry.research.protocol import WARMUP_PREFIX
-
-    days = params["dataset"]["days"]
-    dev = days - math.floor(days * params["holdout_fraction"])
+    dev = holdout_start_index(params["dataset"]["days"], params["holdout_fraction"])
     wf = params["walk_forward"]
     need = WARMUP_PREFIX + wf["train_days"] + wf["test_days"]
     if dev < need:
@@ -62,30 +59,64 @@ def headline(out_dir: Path) -> str | None:
 
 
 def on_publish(root: Path, record: dict[str, Any], out_dir: Path) -> list[str]:
-    """Cross-run holdout audit: a sealed holdout may be evaluated once per dataset and strategy.
+    """Cross-run holdout audit. A dataset's sealed holdout may be looked at once per strategy.
 
-    If an earlier run already evaluated the same dataset's holdout for a strategy with different
-    frozen parameters, the holdout has been used to compare tuning choices; this run's holdout
-    numbers are flagged as contaminated (shown on the site, never silently accepted).
+    A run is flagged `contaminated` for a strategy when an earlier run on the same dataset
+    (a) evaluated an overlapping holdout with different frozen parameters (the holdout was used
+    to compare tuning choices), or (b) used as its holdout dates that this run treats as
+    development data (this run trains on data already seen as "unseen"). Flags are shown on the
+    site; nothing is silently accepted.
     """
     manifest = json.loads((out_dir / "manifest.json").read_text())
     holdout = json.loads((out_dir / "holdout.json").read_text())
     dataset_sha = manifest["dataset"]["sha256"]
+    start, end = holdout["span"]
     ledger = read_json(root, "holdout/ledger.json", {"datasets": {}})
     prior = ledger["datasets"].get(dataset_sha, [])
     findings = []
     for ev in holdout["evaluations"]:
         earlier = [p for p in prior if p["strategy"] == ev["strategy"] and p["run_id"] != record["run_id"]]
-        changed = [p for p in earlier if p["frozen_params"] != ev["frozen_params"]]
-        findings.append({"strategy": ev["strategy"], "prior_evaluations": len(earlier),
-                         "contaminated": bool(changed), "prior_runs": [p["run_id"] for p in changed]})
-        prior.append({"run_id": record["run_id"], "strategy": ev["strategy"], "frozen_params": ev["frozen_params"]})
+        reasons = []
+        for p in earlier:
+            p_start, p_end = p.get("span") or (None, None)
+            overlaps = p_start is not None and p_start <= end and start <= p_end
+            if overlaps and p["frozen_params"] != ev["frozen_params"]:
+                reasons.append({"run_id": p["run_id"],
+                                "why": "same holdout evaluated with different frozen parameters"})
+            elif p_start is not None and p_start < start:
+                reasons.append({"run_id": p["run_id"],
+                                "why": f"this run develops on {p_start} onward, which that run held out"})
+        findings.append({"strategy": ev["strategy"], "prior_evaluations": len(earlier), "contaminated": bool(reasons),
+                         "prior_runs": sorted({r["run_id"] for r in reasons}), "reasons": reasons})
+        prior.append({"run_id": record["run_id"], "strategy": ev["strategy"], "frozen_params": ev["frozen_params"],
+                      "span": [start, end]})
     ledger["datasets"][dataset_sha] = prior
     (root / "holdout").mkdir(exist_ok=True)
     (root / "holdout" / "ledger.json").write_text(pretty(ledger))
     rel = f"runs/{record['run_id']}/holdout_audit.json"
-    write_immutable(root, rel, pretty({"dataset_sha256": dataset_sha, "strategies": findings}).encode())
+    write_immutable(root, rel, pretty({"dataset_sha256": dataset_sha, "holdout_span": [start, end],
+                                       "strategies": findings}).encode())
     return [rel]
+
+
+REASON_KINDS = [
+    ("t-statistic", "OOS Sharpe not statistically significant"),
+    ("buy-and-hold", "does not beat buy-and-hold"),
+    ("Holdout", "holdout return not positive"),
+    ("stability", "unstable parameter neighbourhood"),
+    ("round trip", "too few completed round trips"),
+    ("trades", "too few trades"),
+    ("Sharpe", "OOS Sharpe below the bar"),
+]
+
+
+def reason_kind(reason: str) -> str:
+    """Group rejection reasons by what failed, not by the numbers in the sentence."""
+    lowered = reason.lower()
+    for needle, kind in REASON_KINDS:
+        if needle.lower() in lowered:
+            return kind
+    return "other"
 
 
 def memory_candidates(root: Path) -> list[dict[str, Any]]:
@@ -116,14 +147,14 @@ def memory_candidates(root: Path) -> list[dict[str, Any]]:
         if len(rows) < 3:
             continue
         rejected = [s for _, s in rows if s["verdict"] == "rejected"]
-        reasons = Counter(r.split(" ")[0] + " " + r.split(" ")[1] for s in rejected for r in s["reasons"][:1])
+        reasons = Counter(reason_kind(r) for s in rejected for r in s["reasons"])
         sharpe = statistics.median(s["oos_metrics"]["sharpe"] for _, s in rows)
         top = reasons.most_common(1)[0][0] if reasons else "n/a"
         run_ids = [rid for rid, _ in rows][:20]
         out.append({
             "topic": f"Strategy '{strat_id}' across synthetic regimes",
             "finding": (f"Rejected in {len(rejected)} of {len(rows)} completed runs; median out-of-sample "
-                        f"Sharpe {sharpe:.2f}; most common first rejection reason starts with '{top}'."),
+                        f"Sharpe {sharpe:.2f}; most common rejection reason: {top}."),
             "supporting_run_ids": run_ids,
             "evidence_links": [f"{base}/runs/{rid}/results.json" for rid in run_ids[:5]],
             "scope": "research-finding",

@@ -134,7 +134,7 @@ def run(request_path: Path, outdir: Path, schema_path: Path | None = None) -> di
         dataset_csv=canonical,
         quality=quality,
         strategies=[s.snapshot() for s in REGISTRY.values()],
-        assumptions=assumptions(research["costs"]),
+        assumptions=assumptions(research["costs"], research["oos_days"], research["grid_combos"]),
         research=research,
     )
     return research["summary"]

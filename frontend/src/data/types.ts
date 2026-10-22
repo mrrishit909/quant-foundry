@@ -5,6 +5,8 @@ export interface Metrics {
   sharpe: number;
   max_drawdown: number;
   trades: number;
+  round_trips?: number;
+  days?: number;
   turnover: number;
   fees_paid: number;
   slippage_paid: number;

@@ -23,9 +23,16 @@
 - **Engine (`src/quantfoundry`)**: pure, deterministic Python (numpy, pandas). Given a validated
   request it writes a fixed set of files (see `quantfoundry/outputs.py` for the contract). Signals use
   bars up to the close of day t; orders fill at the open of day t+1 with adverse slippage and a
-  proportional fee; whole shares; long only; position cap 25 % per symbol; cash earns nothing.
-  Every walk-forward window starts flat with 100,000 and is warmed up on earlier bars. The last
-  `holdout_fraction` of dates is sealed until parameters are frozen.
+  proportional fee; whole shares; long only; position cap 25 % per symbol, enforced at each
+  rebalance decision (positions can drift above it between decisions); cash earns nothing. Every
+  walk-forward window starts flat with 100,000 and is warmed up on earlier bars; windows are laid
+  out backward from the last development day. The last `holdout_fraction` of dates is sealed until
+  parameters are frozen, and the holdout ends with every position sold at the final close.
+  A strategy is accepted only if all six rules hold: out-of-sample Sharpe above 0.30, a Sharpe
+  t-statistic (Sharpe x sqrt(days / 252)) of at least 2, Sharpe above buy-and-hold, a positive
+  holdout return after liquidation, parameter stability of at least 0.30, and at least ten
+  completed round trips. The t-statistic is a guard against noise, not a full multiple-comparison
+  correction (see `assumptions.json`, `verdict_rules`).
 - **Harness (`harness/`)**: stdlib plus `jsonschema`. `issueform` parses untrusted issue forms;
   `intake` authorizes by identity; `runs` admits and publishes; `state` implements optimistic
   compare-and-swap writes to the `state` branch; `reconcile` repairs interrupted runs;

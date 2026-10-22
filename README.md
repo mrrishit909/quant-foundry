@@ -41,7 +41,7 @@ any success. Historical simulation only: no brokerage, no orders, no profit clai
 
 Synthetic data with a Monday to Friday calendar and no holidays, corporate actions or market
 impact beyond a fixed slippage; long only; three strategy families with small grids; daily bars,
-so Sharpe estimates are noisy. Replay was checked across platforms for one request (macOS and
+so Sharpe estimates are noisy: the t-statistic rule cut false acceptances on pure random walks sharply (1 of 30 default-size runs accepted a strategy in the adversarial check) but does not remove them. Replay was checked across platforms for one request (macOS and
 GitHub's Ubuntu runner): every analytic output was byte-identical; `dataset.csv.gz` differed only
 in its gzip container (zlib builds differ) while its decompressed content matched the sha256 in
 `manifest.json`. Same-machine byte-identical replay is a release gate. The optional AI grader runs only if the owner adds

@@ -17,10 +17,12 @@ METRIC_KEYS = [
     "sharpe",
     "max_drawdown",
     "trades",
+    "round_trips",
     "turnover",
     "fees_paid",
     "slippage_paid",
     "exposure",
+    "days",
 ]
 
 
@@ -29,7 +31,8 @@ class Curve:
     returns: np.ndarray  # daily simple returns, first day measured against starting cash
     exposure: np.ndarray  # gross weight at each close
     turnover: np.ndarray  # traded notional / previous close equity
-    trades: int
+    trades: int  # fills (buys and sells)
+    round_trips: int  # sells that take a position back to zero
     fees: float
     slippage: float
 
@@ -37,13 +40,19 @@ class Curve:
 def curve(bt: Backtest) -> Curve:
     prev = np.concatenate(([bt.initial_cash], bt.equity[:-1]))
     traded = np.zeros(len(bt.equity))
+    held: dict[str, int] = {}
+    round_trips = 0
     for tr in bt.trades:
         traded[tr["day"] - bt.start] += tr["notional"]
+        held[tr["symbol"]] = held.get(tr["symbol"], 0) + (tr["qty"] if tr["side"] == "buy" else -tr["qty"])
+        if tr["side"] == "sell" and held[tr["symbol"]] == 0:
+            round_trips += 1
     return Curve(
         returns=bt.equity / prev - 1.0,
         exposure=bt.market_value / bt.equity,
         turnover=traded / prev,
         trades=len(bt.trades),
+        round_trips=round_trips,
         fees=float(sum(tr["fee"] for tr in bt.trades)),
         slippage=float(sum(tr["slippage_cost"] for tr in bt.trades)),
     )
@@ -56,6 +65,7 @@ def stitch(curves: list[Curve]) -> Curve:
         exposure=np.concatenate([c.exposure for c in curves]),
         turnover=np.concatenate([c.turnover for c in curves]),
         trades=sum(c.trades for c in curves),
+        round_trips=sum(c.round_trips for c in curves),
         fees=sum(c.fees for c in curves),
         slippage=sum(c.slippage for c in curves),
     )
@@ -81,8 +91,10 @@ def metrics(c: Curve) -> dict:
         "sharpe": float(r.mean()) / sd * math.sqrt(TRADING_DAYS) if sd > 1e-12 else 0.0,
         "max_drawdown": float(drawdown.min()),
         "trades": int(c.trades),
+        "round_trips": int(c.round_trips),
         "turnover": float(c.turnover.sum()),
         "fees_paid": float(c.fees),
         "slippage_paid": float(c.slippage),
         "exposure": float(c.exposure.mean()) if n else 0.0,
+        "days": n,
     }

@@ -13,6 +13,7 @@ import numpy as np
 
 from quantfoundry import __version__
 from quantfoundry.research.metrics import METRIC_KEYS
+from quantfoundry.research.protocol import fmt_sharpe, fmt_t_stat, fmt_vs_bar
 
 MAX_TOTAL_BYTES = 2_000_000
 EXPERIMENT_COLUMNS = ["strategy", "params", "window", "segment", *METRIC_KEYS]
@@ -33,7 +34,16 @@ REQUIRED_JSON = {
     "manifest.json": ["params", "dataset", "package_version", "input_manifest_hash"],
     "data_quality.json": ["status", "checks"],
     "strategies.json": ["strategies"],
-    "assumptions.json": ["signal_timing", "fill_timing", "fees", "slippage", "missing_data", "calendar"],
+    "assumptions.json": [
+        "signal_timing",
+        "fill_timing",
+        "fees",
+        "slippage",
+        "missing_data",
+        "calendar",
+        "verdict_rules",
+        "holdout_liquidation",
+    ],
     "walkforward.json": ["windows", "strategies"],
     "sensitivity.json": ["strategies"],
     "holdout.json": ["span", "sealed", "selection_frozen_before_holdout", "evaluations"],
@@ -163,6 +173,11 @@ def _pct(x: float) -> str:
     return f"{x * 100:.2f}%"
 
 
+def _holdout_pct(x: float) -> str:
+    """Percent that never shows a non-positive holdout return as positive or vice versa."""
+    return fmt_vs_bar(100 * x, lambda v: v > 0, places=2) + "%"
+
+
 def render_report(manifest: dict, quality: dict, assumptions: dict, research: dict) -> str:
     ds = manifest["dataset"]
     p = manifest["params"]
@@ -195,13 +210,17 @@ def render_report(manifest: dict, quality: dict, assumptions: dict, research: di
         f"- Sealed holdout: {research['holdout']['span'][0]} to {research['holdout']['span'][1]} "
         f"(last {_pct(p['holdout_fraction'])} of dates, rounded down)",
         f"- Rolling walk-forward on the development period: {len(research['windows'])} windows of "
-        f"{wf['train_days']} train / {wf['test_days']} test days, step {wf['test_days']}, after a "
-        f"{assumptions['warmup']['prefix_bars']}-bar warm-up prefix",
+        f"{wf['train_days']} train / {wf['test_days']} test days, step {wf['test_days']}, laid out backward "
+        "so the last test window ends the day before the holdout; no train window starts before bar "
+        f"{assumptions['warmup']['prefix_bars']}",
         "- Selection: best in-sample Sharpe over the full grid (ties: fewer trades, then lexicographic params)",
-        "- Final params frozen from the last window, then the holdout is evaluated once per strategy",
+        "- Final params frozen from the window adjacent to the holdout, then the holdout is evaluated once "
+        "per strategy and liquidated at its final close",
         f"- Costs: fee {research['costs']['fee_bps']} bps, slippage {research['costs']['slippage_bps']} bps",
-        "- Acceptance needs all of: OOS Sharpe > 0.30, OOS Sharpe > buy-and-hold OOS Sharpe, holdout "
-        "return > 0, parameter stability >= 0.30, at least 10 OOS trades",
+        "",
+        "## Acceptance rules",
+        "",
+        assumptions["verdict_rules"]["text"],
         "",
         "## Assumptions",
         "",
@@ -209,23 +228,24 @@ def render_report(manifest: dict, quality: dict, assumptions: dict, research: di
         "",
         "## Results",
         "",
-        "| Strategy | Verdict | OOS Sharpe | OOS return | OOS max DD | OOS trades | Holdout return | "
-        "Stability | Frozen params |",
-        "|---|---|---|---|---|---|---|---|---|",
+        "| Strategy | Verdict | OOS Sharpe | OOS t-stat | OOS days | OOS return | OOS max DD | OOS fills | "
+        "OOS round trips | Holdout return | Stability | Frozen params |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for r in research["results"]:
         o, hm = r["oos_metrics"], r["holdout_metrics"]
         lines.append(
-            f"| {r['id']} | {r['verdict']} | {o['sharpe']:.2f} | {_pct(o['total_return'])} | "
-            f"{_pct(o['max_drawdown'])} | {o['trades']} | {_pct(hm['total_return'])} | "
-            f"{r['stability']:.2f} | `{compact(r['frozen_params'])}` |"
+            f"| {r['id']} | {r['verdict']} | {fmt_sharpe(o['sharpe'])} | {fmt_t_stat(r['oos_t_stat'])} | "
+            f"{o['days']} | {_pct(o['total_return'])} | {_pct(o['max_drawdown'])} | {o['trades']} | "
+            f"{o['round_trips']} | {_holdout_pct(hm['total_return'])} | {r['stability']:.2f} | "
+            f"`{compact(r['frozen_params'])}` |"
         )
     for name, label in (("buyhold", "buy-and-hold"), ("cash", "cash")):
-        b = research["benchmarks"][name]
+        oos, hold = (research["benchmarks"][name][seg]["metrics"] for seg in ("oos", "holdout"))
         lines.append(
-            f"| {label} (benchmark) | n/a | {b['oos']['metrics']['sharpe']:.2f} | "
-            f"{_pct(b['oos']['metrics']['total_return'])} | {_pct(b['oos']['metrics']['max_drawdown'])} | "
-            f"{b['oos']['metrics']['trades']} | {_pct(b['holdout']['metrics']['total_return'])} | n/a | n/a |"
+            f"| {label} (benchmark) | n/a | {oos['sharpe']:.3f} | n/a | {oos['days']} | "
+            f"{_pct(oos['total_return'])} | {_pct(oos['max_drawdown'])} | {oos['trades']} | n/a | "
+            f"{_pct(hold['total_return'])} | n/a | n/a |"
         )
     lines += ["", f"OOS span {bh['oos']['span'][0]} to {bh['oos']['span'][1]}.", "", "## Rejections", ""]
     rejected = [r for r in research["results"] if r["verdict"] == "rejected"]
@@ -306,6 +326,10 @@ def validate(outdir: str | Path) -> list[str]:
     if summary.get("accepted", -1) + summary.get("rejected", -1) != len(ids):
         problems.append("summary accepted + rejected does not equal the number of strategies")
     for s in results["strategies"]:
+        for seg in ("oos_metrics", "holdout_metrics"):
+            missing = [k for k in METRIC_KEYS if k not in s.get(seg, {})]
+            if missing:
+                problems.append(f"strategy {s.get('id')} {seg} lacks {missing}")
         if s.get("verdict") not in ("accepted", "rejected"):
             problems.append(f"strategy {s.get('id')} has verdict {s.get('verdict')!r}")
         if s.get("verdict") == "rejected" and not s.get("reasons"):

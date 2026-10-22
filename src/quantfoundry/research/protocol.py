@@ -2,15 +2,17 @@
 
 1. Split: the last floor(days * holdout_fraction) dates are the SEALED HOLDOUT; the rest is
    the development period.
-2. Rolling walk-forward over the development period after a warm-up prefix: train_days
-   in-sample then test_days out-of-sample, step test_days, at most 8 windows.
+2. Rolling walk-forward over the development period: train_days in-sample then test_days
+   out-of-sample, step test_days, at most 8 windows, laid out BACKWARD from the last
+   development day (the last test window ends the day before the holdout). No train window
+   starts before the warm-up prefix.
 3. Per strategy and window: every grid combo is backtested in-sample, the best in-sample
    Sharpe is chosen (ties: fewer trades, then lexicographic params) and evaluated OOS.
    Selection only ever receives development data truncated at the window's train end.
 4. OOS segments are chained into one OOS curve per strategy.
 5. Sensitivity: every grid combo re-run OOS with fixed params over all windows.
-6. Final params are frozen as the last window's choice, then the holdout is evaluated
-   exactly once per strategy with them.
+6. Final params are frozen as the choice of the window adjacent to the holdout, then the
+   holdout is evaluated exactly once per strategy with them, liquidating at the final close.
 7. Benchmarks (equal-weight buy-and-hold, cash) over the same OOS and holdout spans, then a
    verdict per strategy with every failing reason.
 """
@@ -19,7 +21,9 @@ from __future__ import annotations
 
 import math
 from collections import Counter
+from collections.abc import Callable
 from dataclasses import dataclass
+from fractions import Fraction
 
 import numpy as np
 
@@ -36,8 +40,9 @@ MAX_WINDOWS = 8
 # strictly before its start, and all strategies share identical windows.
 WARMUP_PREFIX = max(s.warmup_bars(p) for s in REGISTRY.values() for p in s.params_grid)
 MIN_OOS_SHARPE = 0.3
+MIN_T_STAT = 2.0
 MIN_STABILITY = 0.3
-MIN_TRADES = 10
+MIN_ROUND_TRIPS = 10
 STABILITY_TOLERANCE = 0.5
 ACCOUNTING_TOLERANCE = 1e-6
 SHORT_ERROR = "allow_short=true is not supported: Quant Foundry only simulates long-only strategies (no short selling)"
@@ -61,18 +66,27 @@ class Window:
 
 
 def holdout_start_index(n_days: int, fraction: float) -> int:
-    return n_days - math.floor(n_days * fraction)
+    """First holdout day: the last floor(n_days * fraction) days are the holdout.
+
+    The floor is exact on the decimal the request states (Fraction of its shortest repr), so
+    floor(800 * 0.29) is 232, not the 231 that binary floating point gives.
+    """
+    return n_days - math.floor(n_days * Fraction(str(fraction)))
 
 
 def make_windows(n_dev: int, train_days: int, test_days: int) -> list[Window]:
-    windows: list[Window] = []
-    while len(windows) < MAX_WINDOWS:
-        train_start = WARMUP_PREFIX + len(windows) * test_days
-        test_start = train_start + train_days
-        test_end = test_start + test_days - 1
-        if test_end >= n_dev:
+    """Windows laid out backward from day n_dev - 1, returned oldest first (index 0)."""
+    spans: list[tuple[int, int]] = []  # (train_start, test_end)
+    while len(spans) < MAX_WINDOWS:
+        test_end = n_dev - 1 - len(spans) * test_days
+        train_start = test_end - test_days + 1 - train_days
+        if train_start < WARMUP_PREFIX:
             break
-        windows.append(Window(len(windows), train_start, test_start - 1, test_start, test_end))
+        spans.append((train_start, test_end))
+    windows = [
+        Window(i, train_start, train_start + train_days - 1, train_start + train_days, test_end)
+        for i, (train_start, test_end) in enumerate(reversed(spans))
+    ]
     if not windows:
         need = WARMUP_PREFIX + train_days + test_days
         raise ProtocolError(
@@ -83,10 +97,14 @@ def make_windows(n_dev: int, train_days: int, test_days: int) -> list[Window]:
     return windows
 
 
-def run_strategy(panel: Panel, spec: Strategy, params: dict, start: int, end: int, costs: Costs) -> Backtest:
+def run_strategy(
+    panel: Panel, spec: Strategy, params: dict, start: int, end: int, costs: Costs, liquidate: bool = False
+) -> Backtest:
     view = panel.upto(end)
     states = spec.states(view, params)
-    return backtest(view, states, start, end, costs, max_weight=MAX_WEIGHT, initial_cash=INITIAL_CASH)
+    return backtest(
+        view, states, start, end, costs, max_weight=MAX_WEIGHT, initial_cash=INITIAL_CASH, liquidate=liquidate
+    )
 
 
 def select_params(
@@ -106,42 +124,84 @@ def select_params(
 
 
 def evaluate_holdout(spec: Strategy, params: dict, panel: Panel, start: int, costs: Costs) -> Backtest:
-    return run_strategy(panel, spec, params, start, panel.n_days - 1, costs)
+    """The single holdout run; open positions are sold at the final close, so its return is realized."""
+    return run_strategy(panel, spec, params, start, panel.n_days - 1, costs, liquidate=True)
 
 
-def buy_and_hold(panel: Panel, start: int, end: int, costs: Costs) -> Backtest:
+def buy_and_hold(panel: Panel, start: int, end: int, costs: Costs, liquidate: bool = False) -> Backtest:
     """Equal weight 1/n in every symbol bought at the first open, never rebalanced.
 
     The benchmark is not bound by the strategies' 0.25 per-symbol cap.
     """
     view = panel.upto(end)
     states = np.ones(view.close.shape, dtype=bool)
-    return backtest(view, states, start, end, costs, max_weight=1.0 / view.n_symbols, initial_cash=INITIAL_CASH)
+    return backtest(
+        view,
+        states,
+        start,
+        end,
+        costs,
+        max_weight=1.0 / view.n_symbols,
+        initial_cash=INITIAL_CASH,
+        liquidate=liquidate,
+    )
 
 
 def cash_curve(days: int) -> Curve:
     zeros = np.zeros(days)
-    return Curve(zeros, zeros, zeros, 0, 0.0, 0.0)
+    return Curve(zeros, zeros, zeros, 0, 0, 0.0, 0.0)
+
+
+def t_stat(m: dict) -> float:
+    """Sharpe t-statistic: annualized Sharpe * sqrt(years of daily observations)."""
+    return m["sharpe"] * math.sqrt(m["days"] / TRADING_DAYS)
+
+
+def fmt_vs_bar(x: float, passes: Callable[[float], bool], places: int = 3) -> str:
+    """`x` with at least `places` decimals, and more if rounding would put it on the wrong side of a rule.
+
+    0.2996 against "> 0.30" prints as 0.300 (not above the bar) while 0.3004 prints as 0.3004.
+    """
+    for d in range(places, 13):
+        text = f"{x:.{d}f}"
+        if passes(float(text)) == passes(x):
+            return text
+    return repr(x)
+
+
+def fmt_sharpe(x: float) -> str:
+    return fmt_vs_bar(x, lambda v: v > MIN_OOS_SHARPE)
+
+
+def fmt_t_stat(x: float) -> str:
+    return fmt_vs_bar(x, lambda v: v >= MIN_T_STAT)
 
 
 def judge(oos: dict, buyhold_oos: dict, holdout: dict, sens: dict) -> tuple[str, list[str]]:
     reasons = []
     if not oos["sharpe"] > MIN_OOS_SHARPE:
-        reasons.append(f"OOS Sharpe {oos['sharpe']:.2f} does not clear the {MIN_OOS_SHARPE:.2f} bar")
+        reasons.append(f"OOS Sharpe {fmt_sharpe(oos['sharpe'])} does not clear the {MIN_OOS_SHARPE:.2f} bar")
+    t = t_stat(oos)
+    if not t >= MIN_T_STAT:
+        reasons.append(
+            f"OOS Sharpe t-statistic {fmt_t_stat(t)} is below the {MIN_T_STAT} significance bar "
+            f"({oos['days']} out-of-sample days)"
+        )
     if not oos["sharpe"] > buyhold_oos["sharpe"]:
         reasons.append(
-            f"OOS Sharpe {oos['sharpe']:.2f} does not beat buy-and-hold OOS Sharpe {buyhold_oos['sharpe']:.2f}"
+            f"OOS Sharpe {oos['sharpe']:.3f} does not beat buy-and-hold OOS Sharpe {buyhold_oos['sharpe']:.3f}"
         )
     if not holdout["total_return"] > 0:
-        reasons.append(f"Holdout total return {holdout['total_return']:.2%} is not positive")
+        shown = fmt_vs_bar(100 * holdout["total_return"], lambda v: v > 0, places=2)
+        reasons.append(f"Holdout total return {shown}% (liquidated at the final close) is not positive")
     if sens["stability"] < MIN_STABILITY:
         reasons.append(
             f"Parameter stability {sens['stability']:.2f} is below the {MIN_STABILITY:.2f} bar "
             f"({sens['within_tolerance']} of {sens['grid_size']} combos within "
             f"{STABILITY_TOLERANCE} Sharpe of the best)"
         )
-    if oos["trades"] < MIN_TRADES:
-        reasons.append(f"Only {oos['trades']} out-of-sample trades; at least {MIN_TRADES} are required")
+    if oos["round_trips"] < MIN_ROUND_TRIPS:
+        reasons.append(f"Only {oos['round_trips']} completed round trips; at least {MIN_ROUND_TRIPS} are required")
     return ("rejected" if reasons else "accepted"), reasons
 
 
@@ -176,8 +236,8 @@ def _headline(accepted: int, total: int) -> str:
     if accepted == 0:
         lead = "The requested strategy was rejected" if total == 1 else f"All {total} strategies were rejected"
         return (
-            f"{lead} on this synthetic dataset: no strategy cleared every out-of-sample, benchmark, "
-            "holdout, stability and trade-count check."
+            f"{lead} on this synthetic dataset: no strategy cleared every out-of-sample, significance, "
+            "benchmark, holdout, stability and round-trip check."
         )
     return (
         f"{accepted} of {total} {'strategy' if total == 1 else 'strategies'} cleared every check and "
@@ -263,14 +323,15 @@ def run_research(panel: Panel, request: dict) -> dict:
 
     oos_start, oos_end = windows[0].test_start, windows[-1].test_end
     bh_oos = curve(checked(buy_and_hold(dev, oos_start, oos_end, costs)))
-    bh_hold = curve(checked(buy_and_hold(panel, h, n - 1, costs)))
+    bh_hold = curve(checked(buy_and_hold(panel, h, n - 1, costs, liquidate=True)))
     oos_span = [panel.day(oos_start), panel.day(oos_end)]
     hold_span = [panel.day(h), panel.day(n - 1)]
     benchmarks = {
         "buyhold": {
             "description": (
                 "equal-weight (1/n) buy-and-hold of every symbol, bought at the first open of the span "
-                "with the same fee and slippage, never rebalanced"
+                "with the same fee and slippage, never rebalanced; in the holdout it is sold at the final "
+                "close like the strategies"
             ),
             "oos": {"span": oos_span, "metrics": metrics(bh_oos)},
             "holdout": {"span": hold_span, "metrics": metrics(bh_hold)},
@@ -294,6 +355,7 @@ def run_research(panel: Panel, request: dict) -> dict:
                 "verdict": verdict,
                 "reasons": reasons,
                 "oos_metrics": oos_m,
+                "oos_t_stat": t_stat(oos_m),
                 "holdout_metrics": hold_m,
                 "frozen_params": frozen[spec.id],
                 "stability": sensitivity[spec.id]["stability"],
@@ -315,6 +377,8 @@ def run_research(panel: Panel, request: dict) -> dict:
     equity = _equity_table(panel, specs, oos_start, oos_end, h, oos_curves, holdout_curves, bh_oos, bh_hold)
     return {
         "costs": {"fee_bps": costs.fee_bps, "slippage_bps": costs.slippage_bps},
+        "oos_days": oos_end - oos_start + 1,
+        "grid_combos": sum(len(s.params_grid) for s in specs),
         "holdout_start": panel.day(h),
         "windows": [
             {
@@ -396,7 +460,10 @@ def _equity_table(panel, specs, oos_start, oos_end, h, oos_curves, holdout_curve
     }
 
 
-def assumptions(costs: dict) -> dict:
+def assumptions(costs: dict, oos_days: int, grid_combos: int) -> dict:
+    """Every modelling assumption; `oos_days` and `grid_combos` describe this run for the verdict text."""
+    se = math.sqrt(TRADING_DAYS / oos_days)
+
     def item(text: str, **fields) -> dict:
         return {**fields, "text": text}
 
@@ -420,10 +487,14 @@ def assumptions(costs: dict) -> dict:
             slippage_bps=costs["slippage_bps"],
         ),
         "position_limits": item(
-            f"Equal weight among symbols currently long, capped at {MAX_WEIGHT} per symbol, so gross "
-            "exposure is at most 1.0. Targets are sized at the signal close: floor(weight * equity / close).",
+            f"Target weight = min(1 / number of long symbols, {MAX_WEIGHT}), sized at the signal close as "
+            "floor(weight * equity / close). Enforced exactly: at every decision (a change in the set of "
+            f"long symbols) no position is left above {MAX_WEIGHT} of equity at that close; larger ones are "
+            "trimmed to target. Not enforced: between decisions positions drift with prices and can exceed "
+            f"{MAX_WEIGHT}. Gross exposure never exceeds 1.0 because cash cannot go negative.",
             allocation="equal_weight_among_long",
             max_weight_per_symbol=MAX_WEIGHT,
+            cap_enforced="at_decision_time",
             max_gross_exposure=1.0,
         ),
         "cash": item(
@@ -442,9 +513,9 @@ def assumptions(costs: dict) -> dict:
             rule="defer_and_mark_last_close",
         ),
         "warmup": item(
-            f"The first {WARMUP_PREFIX} development bars (the largest warm-up in the registry) are never "
-            "evaluated; they prime indicators. Each backtest computes signals from all bars before its "
-            "start, never from bars after it. A strategy is flat until its own warm-up is complete.",
+            f"No train window starts before development bar {WARMUP_PREFIX} (the largest warm-up in the "
+            "registry), so indicators are always primed by earlier bars. Each backtest computes signals "
+            "from all bars before its start, never from bars after it.",
             prefix_bars=WARMUP_PREFIX,
         ),
         "calendar": item(
@@ -455,34 +526,73 @@ def assumptions(costs: dict) -> dict:
         "share_rounding": item("Whole shares only, rounded down.", rule="floor"),
         "rebalance": item(
             "Targets are recomputed only when the set of long symbols changes. Entries and exits always "
-            "execute; a symbol that stays long is resized to the new equal weight only if its share count "
-            f"is more than {REBALANCE_BAND:.0%} off target. No calendar rebalancing. Sells execute before "
-            "buys at the same open.",
+            "execute; a symbol that stays long is resized to the new equal weight if its share count is "
+            f"more than {REBALANCE_BAND:.0%} off target or it is above the {MAX_WEIGHT} cap. No calendar "
+            "rebalancing. Sells execute before buys at the same open.",
             rule="on_long_set_change",
             resize_band=REBALANCE_BAND,
         ),
         "holdout_split": item(
-            "The last floor(days * holdout_fraction) dates are the sealed holdout, evaluated once per "
-            "strategy with parameters frozen from the last walk-forward window.",
-            rounding="floor",
+            "The last floor(days * holdout_fraction) dates are the sealed holdout (exact decimal floor). It "
+            "is evaluated once per strategy with the parameters chosen in the walk-forward window adjacent "
+            "to it.",
+            rounding="floor_exact",
+        ),
+        "walk_forward_layout": item(
+            "Windows are laid out backward from the last development day: the last test window ends the day "
+            "before the holdout, earlier windows step back by test_days, at most 8 windows, and no train "
+            f"window starts before bar {WARMUP_PREFIX}. Development bars before the first train window are "
+            "only used as indicator history.",
+            direction="backward_from_holdout",
+            max_windows=MAX_WINDOWS,
+        ),
+        "holdout_liquidation": item(
+            "At the end of the holdout every open position is sold at the final close (the last valid close "
+            "if the final bar is missing) with the same slippage (applied to the close) and fee, so holdout "
+            "returns are realized. These fills appear in trades.csv with the final close in the ref_open "
+            "column. The holdout buy-and-hold benchmark is liquidated the same way.",
+            rule="sell_all_at_final_close",
         ),
         "window_boundaries": item(
-            "Each walk-forward backtest starts flat with the initial cash. Positions open at a window's "
-            "end are marked at that close and not charged an exit; the next window starts flat, so a "
-            "position held across a boundary pays entry costs again. OOS segments are contiguous and "
-            "chained by returns.",
+            "Each OOS window backtest starts flat with the initial cash. Positions still open at a window's "
+            "end are marked at that close without an exit cost and are not liquidated; the next window "
+            "starts flat, so a position a continuous run would have carried pays one extra entry cost "
+            "(a small conservative penalty), and its round trip only counts once it closes inside a window. "
+            "OOS segments are contiguous and chained by returns.",
         ),
         "equity_chaining": item(
             "equity.csv shows the chained OOS curve and then continues into the holdout by chaining "
-            "holdout returns onto the last OOS value. Dates between the last OOS window and the holdout "
-            "start (if any) are not part of either curve.",
+            "holdout returns onto the last OOS value. The OOS span ends the day before the holdout.",
+        ),
+        "verdict_rules": item(
+            f"A strategy is accepted only if ALL hold: (1) OOS Sharpe > {MIN_OOS_SHARPE}; (2) OOS Sharpe "
+            f"t-statistic = Sharpe * sqrt(OOS days / {TRADING_DAYS}) >= {MIN_T_STAT}; (3) OOS Sharpe > "
+            "buy-and-hold OOS Sharpe; (4) holdout total return after liquidation > 0; (5) parameter "
+            f"stability (share of grid combos with OOS Sharpe within {STABILITY_TOLERANCE} of the best) >= "
+            f"{MIN_STABILITY}; (6) at least {MIN_ROUND_TRIPS} completed OOS round trips (sells that close "
+            f"a position). Rule 2 exists because this run tried {grid_combos} grid combos in-sample and the "
+            f"standard error of an annualized Sharpe is about sqrt({TRADING_DAYS} / days), {se:.2f} over its "
+            f"{oos_days} OOS days: a Sharpe of {MIN_OOS_SHARPE} alone is well inside the noise. A t-statistic "
+            f"of {MIN_T_STAT} is a guard, not a full multiple-comparison correction; noise can still pass "
+            "occasionally.",
+            min_oos_sharpe=MIN_OOS_SHARPE,
+            min_t_stat=MIN_T_STAT,
+            must_beat_buyhold_oos_sharpe=True,
+            holdout_return_positive_after_liquidation=True,
+            min_stability=MIN_STABILITY,
+            stability_tolerance=STABILITY_TOLERANCE,
+            min_round_trips=MIN_ROUND_TRIPS,
+            oos_days=oos_days,
+            grid_combos_tested=grid_combos,
+            sharpe_standard_error=se,
         ),
         "metrics": item(
             f"Daily simple returns; {TRADING_DAYS} trading days per year; Sharpe = mean / std (ddof=1) * "
             f"sqrt({TRADING_DAYS}) with rf = 0 and 0.0 for a flat curve; max_drawdown is a negative "
             "fraction; turnover = sum of daily traded notional / previous close equity; exposure = mean "
-            "gross weight at the close; stitched fees and slippage are summed over segments, each run on "
-            "the initial cash.",
+            "gross weight at the close; trades counts fills, round_trips counts sells that take a "
+            "position to zero; days is the number of daily observations; stitched fees and slippage are "
+            "summed over segments, each run on the initial cash.",
             trading_days_per_year=TRADING_DAYS,
         ),
     }

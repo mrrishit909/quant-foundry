@@ -141,7 +141,7 @@ function EquitySection({ run }: { run: RunBundle }) {
   );
 }
 
-type SortKey = "sharpe" | "total_return" | "max_drawdown" | "holdout" | "trades" | "costs" | "stability";
+type SortKey = "sharpe" | "total_return" | "max_drawdown" | "holdout" | "round_trips" | "costs" | "stability";
 
 function ComparisonSection({ run }: { run: RunBundle }) {
   const [sort, setSort] = useState<{ key: SortKey; dir: 1 | -1 }>({ key: "sharpe", dir: -1 });
@@ -160,7 +160,7 @@ function ComparisonSection({ run }: { run: RunBundle }) {
     holdout: run.results.benchmarks[k].holdout.total_return,
   }));
   const value = (r: { oos: Metrics; holdout: number; stability?: number | null }, key: SortKey) =>
-    key === "holdout" ? r.holdout : key === "costs" ? r.oos.fees_paid + r.oos.slippage_paid : key === "stability" ? (r.stability ?? -1) : r.oos[key];
+    key === "holdout" ? r.holdout : key === "costs" ? r.oos.fees_paid + r.oos.slippage_paid : key === "stability" ? (r.stability ?? -1) : (r.oos[key] ?? 0);
   const sorted = [...rows].sort((a, b) => (value(a, sort.key) - value(b, sort.key)) * sort.dir);
   const head = (key: SortKey, label: string) => {
     const active = sort.key === key;
@@ -190,7 +190,7 @@ function ComparisonSection({ run }: { run: RunBundle }) {
               {head("total_return", "OOS return")}
               {head("max_drawdown", "Max drawdown")}
               {head("holdout", "Holdout return")}
-              {head("trades", "Trades")}
+              {head("round_trips", "Round trips")}
               {head("costs", "Costs paid")}
               {head("stability", "Stability")}
             </tr>
@@ -211,7 +211,7 @@ function ComparisonSection({ run }: { run: RunBundle }) {
                 <td className="qf-num">{signedPct(r.oos.total_return)}</td>
                 <td className="qf-num">{pct(r.oos.max_drawdown)}</td>
                 <td className="qf-num">{signedPct(r.holdout)}</td>
-                <td className="qf-num">{r.oos.trades}</td>
+                <td className="qf-num">{r.oos.round_trips ?? ""}</td>
                 <td className="qf-num">{money(r.oos.fees_paid + r.oos.slippage_paid)}</td>
                 <td className="qf-num">{fixed(r.stability ?? NaN)}</td>
               </tr>
@@ -224,7 +224,7 @@ function ComparisonSection({ run }: { run: RunBundle }) {
                 <td className="qf-num">{signedPct(b.oos.total_return)}</td>
                 <td className="qf-num">{pct(b.oos.max_drawdown)}</td>
                 <td className="qf-num">{signedPct(b.holdout)}</td>
-                <td className="qf-num">{b.oos.trades}</td>
+                <td className="qf-num">{b.oos.round_trips ?? ""}</td>
                 <td className="qf-num">{money(b.oos.fees_paid + b.oos.slippage_paid)}</td>
                 <td className="qf-num">n/a</td>
               </tr>
@@ -251,7 +251,7 @@ function ComparisonSection({ run }: { run: RunBundle }) {
                 ["OOS return", signedPct(r.oos.total_return)],
                 ["Max drawdown", pct(r.oos.max_drawdown)],
                 ["Holdout", signedPct(r.holdout)],
-                ["Trades", String(r.oos.trades)],
+                ["Round trips", String(r.oos.round_trips ?? "")],
                 ["Stability", r.stability === null ? "n/a" : fixed(r.stability)],
               ].map(([k, v]) => (
                 <div key={k}><dt>{k}</dt><dd className="qf-num">{v}</dd></div>
@@ -438,7 +438,7 @@ function HoldoutSection({ run }: { run: RunBundle }) {
         <table className="qf-table">
           <caption className="qf-sr-only">Holdout evaluations</caption>
           <thead>
-            <tr><th scope="col">Strategy</th><th scope="col">Frozen parameters</th><th scope="col">Return</th><th scope="col">Sharpe</th><th scope="col">Max drawdown</th><th scope="col">Trades</th></tr>
+            <tr><th scope="col">Strategy</th><th scope="col">Frozen parameters</th><th scope="col">Return</th><th scope="col">Sharpe</th><th scope="col">Max drawdown</th><th scope="col">Fills</th></tr>
           </thead>
           <tbody>
             {h.evaluations.map((e) => (

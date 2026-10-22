@@ -6,16 +6,20 @@ Rules (also written to assumptions.json):
   before the window, i.e. warm-up data) drives the first open of the window.
 - Orders are sized at the signal close: target shares = floor(w * equity_t / close_t), with
   w = min(1 / number of long symbols, max_weight). Gross exposure therefore stays <= 1.
-- Targets are recomputed only when the set of long symbols changes. Entries and exits always
-  execute; a symbol that stays long is resized only if its share count is off target by more
-  than REBALANCE_BAND (10%), which avoids tiny drift-correction trades.
+- Decisions happen only when the set of long symbols changes. Entries and exits always
+  execute. A symbol that stays long is resized only if its share count is off target by more
+  than REBALANCE_BAND (10%), EXCEPT that any position worth more than max_weight of equity at
+  the decision close is always trimmed to target: max_weight is a hard cap at decision time.
+  Between decisions positions drift with prices and may exceed it.
 - Fills: buys at open * (1 + slippage), sells at open * (1 - slippage). Fee = fee_rate *
   |notional|, paid in cash. Sells execute before buys. Whole shares only; a buy that cash
   cannot cover (including its fee) is reduced to what cash covers. No leverage, cash earns 0.
 - Missing bar: the symbol cannot trade that day. Its order stays pending and executes at the
   next valid open (unless a newer target replaces it). It is marked at its last valid close.
   Every missing bar inside the span is recorded in `missing_events`.
-- Equity is marked at every close.
+- Equity is marked at every close. With `liquidate=True` every open position is sold at the
+  final close (last valid close if the final bar is missing) with the same slippage and fee,
+  and the last day is recorded after that sale.
 """
 
 from __future__ import annotations
@@ -56,8 +60,9 @@ def _orders(long_set: np.ndarray, equity: float, marks: np.ndarray, max_weight: 
     orders = {}
     for j in range(len(qty)):
         target = int(weight * equity // marks[j]) if long_set[j] and marks[j] > 0 else 0
-        stays_long = target > 0 and qty[j] > 0
-        if target != qty[j] and not (stays_long and abs(target - qty[j]) <= REBALANCE_BAND * target):
+        over_cap = qty[j] * marks[j] > max_weight * equity
+        in_band = target > 0 and qty[j] > 0 and abs(target - qty[j]) <= REBALANCE_BAND * target
+        if target != qty[j] and (over_cap or not in_band):
             orders[j] = target
     return orders
 
@@ -71,6 +76,7 @@ def backtest(
     *,
     max_weight: float = 0.25,
     initial_cash: float = 100_000.0,
+    liquidate: bool = False,
 ) -> Backtest:
     if not 0 <= start <= end < panel.n_days:
         raise ValueError(f"bad span [{start}, {end}] for {panel.n_days} days")
@@ -93,50 +99,51 @@ def backtest(
     equity_out, cash_out, mv_out = np.empty(span), np.empty(span), np.empty(span)
     trades: list[dict] = []
     missing: list[dict] = []
+
+    def execute(t: int, j: int, ref: float, target: int) -> None:
+        nonlocal cash
+        delta = target - int(qty[j])
+        if delta < 0:
+            q, fill = -delta, ref * (1.0 - slip)
+        else:
+            fill = ref * (1.0 + slip)
+            q = min(delta, int(cash // (fill * (1.0 + fee_rate))))
+            while q > 0 and q * fill + q * fill * fee_rate > cash:
+                q -= 1  # guards the float edge of the floor division above
+            if q <= 0:
+                return
+        notional = q * fill
+        fee = notional * fee_rate
+        if delta < 0:
+            cash += notional - fee
+            qty[j] -= q
+        else:
+            cash -= notional + fee
+            qty[j] += q
+        trades.append(
+            {
+                "day": t,
+                "date": panel.day(t),
+                "symbol": panel.symbols[j],
+                "side": "sell" if delta < 0 else "buy",
+                "qty": q,
+                "ref_open": ref,  # reference price: the open, or the final close for a liquidation
+                "fill_price": fill,
+                "fee": fee,
+                "slippage_cost": abs(fill - ref) * q,
+                "notional": notional,
+            }
+        )
+
     for t in range(start, end + 1):
-        date = panel.day(t)
         # Sells first so their proceeds can fund buys at the same open.
         for j in sorted(pending, key=lambda j: (pending[j] > qty[j], j)):
-            if not valid[t, j]:
-                continue  # deferred to the next valid open
-            ref = float(opens[t, j])
-            delta = pending.pop(j) - int(qty[j])
-            if delta < 0:
-                q = -delta
-                fill = ref * (1.0 - slip)
-            else:
-                fill = ref * (1.0 + slip)
-                q = min(delta, int(cash // (fill * (1.0 + fee_rate))))
-                while q > 0 and q * fill + q * fill * fee_rate > cash:
-                    q -= 1  # guards the float edge of the floor division above
-                if q <= 0:
-                    continue
-            notional = q * fill
-            fee = notional * fee_rate
-            if delta < 0:
-                cash += notional - fee
-                qty[j] -= q
-            else:
-                cash -= notional + fee
-                qty[j] += q
-            trades.append(
-                {
-                    "day": t,
-                    "date": date,
-                    "symbol": panel.symbols[j],
-                    "side": "sell" if delta < 0 else "buy",
-                    "qty": q,
-                    "ref_open": ref,
-                    "fill_price": fill,
-                    "fee": fee,
-                    "slippage_cost": abs(fill - ref) * q,
-                    "notional": notional,
-                }
-            )
+            if valid[t, j]:  # otherwise deferred to the next valid open
+                execute(t, j, float(opens[t, j]), pending.pop(j))
         for j in np.flatnonzero(~valid[t]):
             missing.append(
                 {
-                    "date": date,
+                    "date": panel.day(t),
                     "symbol": panel.symbols[j],
                     "held_qty": int(qty[j]),
                     "order_deferred": bool(j in pending),
@@ -151,6 +158,11 @@ def backtest(
         if t < end and not np.array_equal(states[t], long_set):
             long_set = states[t].copy()
             pending = _orders(long_set, equity, marks[t], max_weight, qty)
+
+    if liquidate:
+        for j in np.flatnonzero(qty > 0):
+            execute(end, int(j), float(marks[end, j]), 0)
+        equity_out[-1], cash_out[-1], mv_out[-1] = cash, cash, 0.0
 
     return Backtest(
         symbols=panel.symbols,

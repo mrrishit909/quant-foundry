@@ -108,9 +108,12 @@ def _symbol_bars(rng: np.random.Generator, days: int, mix: tuple[float, ...]) ->
     open_ = prev_close * np.exp(0.3 * sigma_t * z[1])
     high = np.maximum(open_, close) * np.exp(0.5 * sigma_t * np.abs(z[2]))
     low = np.minimum(open_, close) * np.exp(-0.5 * sigma_t * np.abs(z[3]))
-    # Rescaling a whole series leaves every return unchanged; it only keeps prices far from 0
-    # so that 4-decimal canonical rounding never distorts them.
-    scale = max(1.0, MIN_LOW / low.min())
+    # Rescaling a whole series leaves every return unchanged; it keeps prices far from 0 so that
+    # 4-decimal canonical rounding does not distort them. The scale only looks at bars that can
+    # never be holdout (the schema's largest holdout_fraction is 0.3), so holdout prices cannot
+    # change development-period data. Later bars may therefore dip below MIN_LOW.
+    never_holdout = days - (3 * days) // 10
+    scale = max(1.0, MIN_LOW / low[:never_holdout].min())
     move = np.abs(np.log(close / prev_close)) / sigma_t
     volume = np.floor(base_volume * np.exp(0.25 * z[4]) * (1.0 + move))
     return open_ * scale, high * scale, low * scale, close * scale, volume
