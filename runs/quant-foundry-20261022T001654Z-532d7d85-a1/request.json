@@ -1,0 +1,27 @@
+{
+  "params": {
+    "allow_short": false,
+    "costs": {
+      "fee_bps": 1.0,
+      "slippage_bps": 5.0
+    },
+    "dataset": {
+      "days": 2016,
+      "kind": "synthetic",
+      "regime_mix": "choppy",
+      "seed": 12,
+      "symbols": 8
+    },
+    "holdout_fraction": 0.25,
+    "strategies": [
+      "trend",
+      "meanrev",
+      "breakout"
+    ],
+    "walk_forward": {
+      "test_days": 126,
+      "train_days": 504
+    }
+  },
+  "request_id": "532d7d8581c926b2"
+}
