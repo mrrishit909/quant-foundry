@@ -37,6 +37,18 @@ any success. Historical simulation only: no brokerage, no orders, no profit clai
 [portfolio integration](docs/PORTFOLIO_INTEGRATION.md), [design contract](docs/DESIGN_CONTRACT.md),
 [portfolio manifest](portfolio-manifest.json).
 
+## Assets and licences
+
+| Font | Package | Licence |
+|---|---|---|
+| Newsreader | `@fontsource-variable/newsreader` 5.3.0 | SIL Open Font License 1.1, (c) The Newsreader Project Authors |
+| IBM Plex Sans Condensed | `@fontsource/ibm-plex-sans-condensed` 5.3.0 | SIL Open Font License 1.1, (c) IBM Corp. |
+
+The fonts are installed from npm (Fontsource packages, which carry the OFL text) and bundled into the
+site's build; nothing loads from a third-party font service. Icons and illustrations are original inline
+SVG and CSS; there are no photographs or third-party images. Price series are synthetic, generated from a committed seed; nothing is market data. The code is published
+in this public repository.
+
 ## Limitations
 
 Synthetic data with a Monday to Friday calendar and no holidays, corporate actions or market
