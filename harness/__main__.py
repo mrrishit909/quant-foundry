@@ -126,7 +126,7 @@ def cmd_publish(args: argparse.Namespace) -> None:
 
 
 def cmd_compute(args: argparse.Namespace) -> None:
-    """Runs on the compute job (no write token, no secrets): validate, compute via the project hook, validate outputs."""
+    """Compute job entry (no write token, no secrets): validate, run the project hook, validate outputs."""
     from .runs import hooks, request_errors, validate_outputs
 
     params = json.loads(Path(args.request).read_text())
