@@ -19,6 +19,20 @@ PUBLIC_FILES = [
 ]
 
 
+def compute(params: dict[str, Any], out_dir: Path) -> None:
+    """Deterministic research run (called by `python -m harness compute` on the read-only compute job)."""
+    import json as _json
+    import subprocess
+    import sys
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as tmp:
+        req = Path(tmp) / "request.json"
+        req.write_text(_json.dumps(params))
+        subprocess.run([sys.executable, "-m", "quantfoundry", "run", "--request", str(req), "--out", str(out_dir)],
+                       check=True)
+
+
 def request_problems(params: dict[str, Any]) -> list[str]:
     """Feasibility beyond the schema: one walk-forward window must fit in the development period."""
     import math

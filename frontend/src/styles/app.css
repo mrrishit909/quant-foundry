@@ -185,7 +185,7 @@
 .qf-root .qf-btn svg { width: 16px; height: 16px; flex: none; }
 
 .qf-root .qf-segmented {
-  position: relative; display: inline-flex; padding: 3px; gap: 2px;
+  position: relative; display: inline-flex; justify-self: start; padding: 3px; gap: 2px;
   border: 1px solid var(--qf-border-strong); border-radius: calc(var(--qf-radius-control) + 2px); background: var(--qf-sunken);
 }
 .qf-root .qf-segmented button {

@@ -48,7 +48,7 @@ jobs:
         run: npm ci
       - working-directory: frontend
         env:
-          BASE_PATH: /quant-foundry/
+          BASE_PATH: /${{ github.event.repository.name }}/
         run: |
           npm run build
           cp dist/index.html dist/404.html
@@ -79,12 +79,15 @@ jobs:
     permissions: {}
     steps:
       - name: Live URL answers with the app shell and a snapshot
+        env:
+          REPO: ${{ github.event.repository.name }}
+          OWNER: ${{ github.repository_owner }}
         run: |
-          base="https://mrrishit909.github.io/quant-foundry/"
+          base="https://${OWNER}.github.io/${REPO}/"
           for i in 1 2 3 4 5 6; do
             code=$(curl -s -o page.html -w '%{http_code}' "$base") || code=000
-            if [ "$code" = "200" ] && grep -q 'data-app="quant-foundry"' page.html; then break; fi
+            if [ "$code" = "200" ] && grep -q "data-app=\"${REPO}\"" page.html; then break; fi
             sleep 10
           done
-          grep -q 'data-app="quant-foundry"' page.html
+          grep -q "data-app=\"${REPO}\"" page.html
           curl -sf "${base}data/snapshot.json" | python3 -c 'import json,sys; d=json.load(sys.stdin); print("snapshot", d["generated_at"], "latest", d["latest_run_id"])'

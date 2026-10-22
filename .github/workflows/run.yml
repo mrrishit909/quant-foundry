@@ -89,11 +89,10 @@ jobs:
         run: |
           printf '%s' "$REQUEST_JSON" > request.json
           mkdir -p out
-          if ! uv run --frozen python -m quantfoundry run --request request.json --out "out/$RUN_ID" 2> compute-error.log; then
+          if ! uv run --frozen python -m harness compute --request request.json --out "out/$RUN_ID" 2> compute-error.log; then
             tail -c 4000 compute-error.log
             exit 1
           fi
-          uv run --frozen python -m quantfoundry validate "out/$RUN_ID"
       - if: success()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

@@ -125,6 +125,22 @@ def cmd_publish(args: argparse.Namespace) -> None:
                               f"Evidence is retained: {state_url}")
 
 
+def cmd_compute(args: argparse.Namespace) -> None:
+    """Runs on the compute job (no write token, no secrets): validate, compute via the project hook, validate outputs."""
+    from .runs import hooks, request_errors, validate_outputs
+
+    params = json.loads(Path(args.request).read_text())
+    errors = request_errors(params)
+    if errors:
+        raise HarnessError("invalid request: " + "; ".join(errors[:5]))
+    out = Path(args.out)
+    hooks().compute(params, out)
+    problems = validate_outputs(out)
+    if problems:
+        raise HarnessError("outputs failed validation: " + "; ".join(problems[:5]))
+    print(f"computed and validated {out}")
+
+
 def cmd_snapshot(args: argparse.Namespace) -> None:
     from .snapshot import build
 
@@ -267,6 +283,10 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--error-file", default="")
     p.add_argument("--workflow-run-id", required=True)
     p.set_defaults(fn=cmd_publish)
+    p = sub.add_parser("compute")
+    p.add_argument("--request", required=True)
+    p.add_argument("--out", required=True)
+    p.set_defaults(fn=cmd_compute)
     p = sub.add_parser("snapshot")
     p.add_argument("--state-dir", required=True)
     p.add_argument("--out", required=True)
