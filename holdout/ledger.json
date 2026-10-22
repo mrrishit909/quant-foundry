@@ -25,6 +25,32 @@
         "run_id": "quant-foundry-20261022T001125Z-af1cc9ea-a1",
         "strategy": "breakout"
       }
+    ],
+    "a68e4a84f22d691b23c6f77f5451c557635805b53ec75aac2f8a1ca1f1f1eb7c": [
+      {
+        "frozen_params": {
+          "fast": 20,
+          "slow": 200
+        },
+        "run_id": "quant-foundry-20261022T001635Z-506f9557-a1",
+        "strategy": "trend"
+      },
+      {
+        "frozen_params": {
+          "entry_z": 1.0,
+          "lookback": 20
+        },
+        "run_id": "quant-foundry-20261022T001635Z-506f9557-a1",
+        "strategy": "meanrev"
+      },
+      {
+        "frozen_params": {
+          "N": 100,
+          "k": 0.0
+        },
+        "run_id": "quant-foundry-20261022T001635Z-506f9557-a1",
+        "strategy": "breakout"
+      }
     ]
   }
 }

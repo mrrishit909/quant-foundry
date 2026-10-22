@@ -1,0 +1,79 @@
+{
+  "accounting": {
+    "backtests_checked": 221,
+    "max_abs_error": 7.275957614e-11,
+    "passed": true,
+    "tolerance": 1e-06
+  },
+  "determinism": {
+    "note": "All randomness comes from numpy PCG64 seeded by the request seed. Outputs contain no timestamps or paths; JSON is written with sorted keys and floats rounded to 10 significant digits, CSV money columns use fixed decimals, and dataset.csv.gz is written with gzip mtime=0. The same request gives byte-identical files."
+  },
+  "holdout": {
+    "evaluated_once": true,
+    "evaluations_per_strategy": {
+      "breakout": 1,
+      "meanrev": 1,
+      "trend": 1
+    },
+    "selection_frozen_before_holdout": true
+  },
+  "lookahead_probe": {
+    "cutoff_date": "2017-05-24",
+    "passed": true,
+    "strategies": [
+      {
+        "equal": true,
+        "params": {
+          "fast": 20,
+          "slow": 200
+        },
+        "strategy": "trend"
+      },
+      {
+        "equal": true,
+        "params": {
+          "entry_z": 1.0,
+          "lookback": 20
+        },
+        "strategy": "meanrev"
+      },
+      {
+        "equal": true,
+        "params": {
+          "N": 100,
+          "k": 0.0
+        },
+        "strategy": "breakout"
+      }
+    ]
+  },
+  "missing_data_events": [
+    {
+      "date": "2019-06-19",
+      "held_qty": 0,
+      "order_deferred": false,
+      "segment": "out_of_sample",
+      "strategy": "trend",
+      "symbol": "SYN06",
+      "window": 3
+    },
+    {
+      "date": "2019-06-19",
+      "held_qty": 702,
+      "order_deferred": true,
+      "segment": "out_of_sample",
+      "strategy": "meanrev",
+      "symbol": "SYN06",
+      "window": 3
+    },
+    {
+      "date": "2019-06-19",
+      "held_qty": 0,
+      "order_deferred": false,
+      "segment": "out_of_sample",
+      "strategy": "breakout",
+      "symbol": "SYN06",
+      "window": 3
+    }
+  ]
+}

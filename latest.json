@@ -1,23 +1,23 @@
 {
-  "completed_at": "2026-10-22T00:11:58Z",
-  "input_manifest_hash": "sha256:76b6110483ef4665bb5d4e2a7e3d1994fd6dbde6e9bb848f4c15ec8911a0673b",
+  "completed_at": "2026-10-22T00:17:31Z",
+  "input_manifest_hash": "sha256:731569eb3d63fa4f8d0557de329e2e85f401d04308ec28916cd93155fe5748cf",
   "result_paths": [
-    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/assumptions.json",
-    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/benchmarks.json",
-    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/checks.json",
-    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/data_quality.json",
-    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/dataset.csv.gz",
-    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/equity.csv",
-    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/experiments.csv",
-    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/holdout.json",
-    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/manifest.json",
-    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/report.md",
-    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/results.json",
-    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/sensitivity.json",
-    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/strategies.json",
-    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/trades.csv",
-    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/walkforward.json",
-    "runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/holdout_audit.json"
+    "runs/quant-foundry-20261022T001635Z-506f9557-a1/assumptions.json",
+    "runs/quant-foundry-20261022T001635Z-506f9557-a1/benchmarks.json",
+    "runs/quant-foundry-20261022T001635Z-506f9557-a1/checks.json",
+    "runs/quant-foundry-20261022T001635Z-506f9557-a1/data_quality.json",
+    "runs/quant-foundry-20261022T001635Z-506f9557-a1/dataset.csv.gz",
+    "runs/quant-foundry-20261022T001635Z-506f9557-a1/equity.csv",
+    "runs/quant-foundry-20261022T001635Z-506f9557-a1/experiments.csv",
+    "runs/quant-foundry-20261022T001635Z-506f9557-a1/holdout.json",
+    "runs/quant-foundry-20261022T001635Z-506f9557-a1/manifest.json",
+    "runs/quant-foundry-20261022T001635Z-506f9557-a1/report.md",
+    "runs/quant-foundry-20261022T001635Z-506f9557-a1/results.json",
+    "runs/quant-foundry-20261022T001635Z-506f9557-a1/sensitivity.json",
+    "runs/quant-foundry-20261022T001635Z-506f9557-a1/strategies.json",
+    "runs/quant-foundry-20261022T001635Z-506f9557-a1/trades.csv",
+    "runs/quant-foundry-20261022T001635Z-506f9557-a1/walkforward.json",
+    "runs/quant-foundry-20261022T001635Z-506f9557-a1/holdout_audit.json"
   ],
-  "run_id": "quant-foundry-20261022T001125Z-af1cc9ea-a1"
+  "run_id": "quant-foundry-20261022T001635Z-506f9557-a1"
 }
