@@ -1,0 +1,31 @@
+{
+  "attempt": 1,
+  "completed_at": null,
+  "created_at": "2026-10-22T00:11:25Z",
+  "error_summary": null,
+  "evidence_paths": [],
+  "input_manifest_hash": null,
+  "parent_run_id": null,
+  "project": "quant-foundry",
+  "request_id": "af1cc9ea367df336",
+  "request_source": {
+    "actor": "mrrishit909",
+    "issue_number": null,
+    "type": "manual"
+  },
+  "resource_usage_summary": {
+    "inference": {
+      "usd": null,
+      "used": false
+    },
+    "output_bytes": null,
+    "wall_seconds": null
+  },
+  "result_paths": [],
+  "run_id": "quant-foundry-20261022T001125Z-af1cc9ea-a1",
+  "schema_version": "1.0",
+  "source_commit": "aa69502603e209aac06748222e51853a3da83da4",
+  "started_at": "2026-10-22T00:11:25Z",
+  "status": "running",
+  "workflow_run_id": 39698151155
+}
