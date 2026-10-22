@@ -1,0 +1,93 @@
+{
+  "entries": [
+    {
+      "confidence": "low",
+      "date": "2026-10-22",
+      "evidence_links": [
+        "https://github.com/mrrishit909/quant-foundry/blob/state/runs/quant-foundry-20261022T001654Z-532d7d85-a1/data_quality.json",
+        "https://github.com/mrrishit909/quant-foundry/blob/state/runs/quant-foundry-20261022T001635Z-506f9557-a1/data_quality.json",
+        "https://github.com/mrrishit909/quant-foundry/blob/state/runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/data_quality.json"
+      ],
+      "expires_on": "2027-01-20",
+      "finding": "The validation check 'missing_bars' warned in 3 completed runs.",
+      "id": "mem-3cd797589d",
+      "revalidate_when": "after a change to the synthetic generator or validation rules",
+      "scope": "data-quality",
+      "status": "active",
+      "supersedes": [],
+      "supporting_run_ids": [
+        "quant-foundry-20261022T001654Z-532d7d85-a1",
+        "quant-foundry-20261022T001635Z-506f9557-a1",
+        "quant-foundry-20261022T001125Z-af1cc9ea-a1"
+      ],
+      "topic": "Recurring data-quality warning 'missing_bars'"
+    },
+    {
+      "confidence": "low",
+      "date": "2026-10-22",
+      "evidence_links": [
+        "https://github.com/mrrishit909/quant-foundry/blob/state/runs/quant-foundry-20261022T001654Z-532d7d85-a1/results.json",
+        "https://github.com/mrrishit909/quant-foundry/blob/state/runs/quant-foundry-20261022T001635Z-506f9557-a1/results.json",
+        "https://github.com/mrrishit909/quant-foundry/blob/state/runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/results.json"
+      ],
+      "expires_on": "2027-01-20",
+      "finding": "Rejected in 3 of 3 completed runs; median out-of-sample Sharpe -0.12; most common first rejection reason starts with 'OOS Sharpe'.",
+      "id": "mem-ce52c9793b",
+      "revalidate_when": "after 10 more completed runs or any change to the strategy or simulator code",
+      "scope": "research-finding",
+      "status": "active",
+      "supersedes": [],
+      "supporting_run_ids": [
+        "quant-foundry-20261022T001654Z-532d7d85-a1",
+        "quant-foundry-20261022T001635Z-506f9557-a1",
+        "quant-foundry-20261022T001125Z-af1cc9ea-a1"
+      ],
+      "topic": "Strategy 'breakout' across synthetic regimes"
+    },
+    {
+      "confidence": "low",
+      "date": "2026-10-22",
+      "evidence_links": [
+        "https://github.com/mrrishit909/quant-foundry/blob/state/runs/quant-foundry-20261022T001654Z-532d7d85-a1/results.json",
+        "https://github.com/mrrishit909/quant-foundry/blob/state/runs/quant-foundry-20261022T001635Z-506f9557-a1/results.json",
+        "https://github.com/mrrishit909/quant-foundry/blob/state/runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/results.json"
+      ],
+      "expires_on": "2027-01-20",
+      "finding": "Rejected in 3 of 3 completed runs; median out-of-sample Sharpe -0.23; most common first rejection reason starts with 'OOS Sharpe'.",
+      "id": "mem-8ad20ea632",
+      "revalidate_when": "after 10 more completed runs or any change to the strategy or simulator code",
+      "scope": "research-finding",
+      "status": "active",
+      "supersedes": [],
+      "supporting_run_ids": [
+        "quant-foundry-20261022T001654Z-532d7d85-a1",
+        "quant-foundry-20261022T001635Z-506f9557-a1",
+        "quant-foundry-20261022T001125Z-af1cc9ea-a1"
+      ],
+      "topic": "Strategy 'meanrev' across synthetic regimes"
+    },
+    {
+      "confidence": "low",
+      "date": "2026-10-22",
+      "evidence_links": [
+        "https://github.com/mrrishit909/quant-foundry/blob/state/runs/quant-foundry-20261022T001654Z-532d7d85-a1/results.json",
+        "https://github.com/mrrishit909/quant-foundry/blob/state/runs/quant-foundry-20261022T001635Z-506f9557-a1/results.json",
+        "https://github.com/mrrishit909/quant-foundry/blob/state/runs/quant-foundry-20261022T001125Z-af1cc9ea-a1/results.json"
+      ],
+      "expires_on": "2027-01-20",
+      "finding": "Rejected in 3 of 3 completed runs; median out-of-sample Sharpe -1.35; most common first rejection reason starts with 'OOS Sharpe'.",
+      "id": "mem-7b019b496e",
+      "revalidate_when": "after 10 more completed runs or any change to the strategy or simulator code",
+      "scope": "research-finding",
+      "status": "active",
+      "supersedes": [],
+      "supporting_run_ids": [
+        "quant-foundry-20261022T001654Z-532d7d85-a1",
+        "quant-foundry-20261022T001635Z-506f9557-a1",
+        "quant-foundry-20261022T001125Z-af1cc9ea-a1"
+      ],
+      "topic": "Strategy 'trend' across synthetic regimes"
+    }
+  ],
+  "schema_version": "1.0"
+}
