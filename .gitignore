@@ -18,3 +18,4 @@ frontend/playwright-report/
 .env
 .env.*
 frontend/.qa/
+cache/
