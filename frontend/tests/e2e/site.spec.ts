@@ -112,6 +112,8 @@ test("controls: disclosure expands, cost sliders recompute, reset restores", asy
 });
 
 test("navigation: current page state, runs ledger, back button, request link", async ({ page }) => {
+  const preview = await page.request.get("./preview.jpg");
+  expect(preview.status(), "portfolio preview image (portfolio-manifest.json preview_image)").toBe(200);
   const problems = watch(page);
   await page.goto("./");
   const wide = (page.viewportSize()?.width ?? 0) > 900; // the primary nav moves into a menu below 900 px
