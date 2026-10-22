@@ -92,8 +92,9 @@ def memory_candidates(root: Path) -> list[dict[str, Any]]:
             per_strategy.setdefault(strat["id"], []).append((entry["run_id"], strat))
         for check in (quality or {}).get("checks", []):
             if check.get("status") == "warn":
-                warnings[check["id"]] += 1
-                warn_runs.setdefault(check["id"], []).append(entry["run_id"])
+                name = check.get("name") or check.get("id") or "unnamed"
+                warnings[name] += 1
+                warn_runs.setdefault(name, []).append(entry["run_id"])
     base = f"https://github.com/{cfg['owner']}/{cfg['repo']}/blob/{cfg['state_branch']}"
     today = date.today()
     out = []

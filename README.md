@@ -41,6 +41,8 @@ any success. Historical simulation only: no brokerage, no orders, no profit clai
 
 Synthetic data with a Monday to Friday calendar and no holidays, corporate actions or market
 impact beyond a fixed slippage; long only; three strategy families with small grids; daily bars,
-so Sharpe estimates are noisy. Byte-identical replay is verified on GitHub's Ubuntu runners and
-one macOS machine, not across every platform. The optional AI grader runs only if the owner adds
+so Sharpe estimates are noisy. Replay was checked across platforms for one request (macOS and
+GitHub's Ubuntu runner): every analytic output was byte-identical; `dataset.csv.gz` differed only
+in its gzip container (zlib builds differ) while its decompressed content matched the sha256 in
+`manifest.json`. Same-machine byte-identical replay is a release gate. The optional AI grader runs only if the owner adds
 an inference secret; release records state whether it ran.
