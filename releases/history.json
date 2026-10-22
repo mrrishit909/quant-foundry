@@ -1,6 +1,13 @@
 {
   "releases": [
     {
+      "created_at": "2026-10-22T03:28:09Z",
+      "release_id": "quant-foundry-20261022T032809Z-e5b2147",
+      "run_id": "quant-foundry-20261022T012123Z-6dfa78d9-a1",
+      "source_commit": "e5b2147ffa765c627e14e5df632cc599434f2e1d",
+      "status": "released"
+    },
+    {
       "created_at": "2026-10-22T02:58:46Z",
       "release_id": "quant-foundry-20261022T025846Z-1fad88f",
       "run_id": "quant-foundry-20261022T012123Z-6dfa78d9-a1",
