@@ -1,0 +1,105 @@
+{
+  "blocked_reason": null,
+  "created_at": "2026-10-26T13:17:08Z",
+  "defect_batch_id": null,
+  "evidence_dir": "outcomes/quant-foundry-20261026T131708Z-cf012dc/",
+  "findings": [
+    {
+      "detail": "sha256:95be335b4a61adab9ca6ec9108cc4074f3c93d2401e8e083752ced9b7c2d39fd",
+      "evidence_paths": [],
+      "id": "rubric-integrity",
+      "kind": "integrity",
+      "objective": true,
+      "seconds": 0.0,
+      "status": "pass",
+      "title": "Rubric matches its review lock"
+    },
+    {
+      "detail": "........                                                                 [100%]",
+      "evidence_paths": [
+        "research-gates.junit.xml",
+        "research-gates.log"
+      ],
+      "id": "research-gates",
+      "kind": "pytest",
+      "objective": true,
+      "seconds": 9.19,
+      "status": "pass",
+      "title": "Accounting reconciles, known scenarios, no lookahead, deterministic replay, costs included, all experiments recorded, rejected strategies visible, holdout sealed"
+    },
+    {
+      "detail": "..............................                                           [100%]",
+      "evidence_paths": [
+        "harness.junit.xml",
+        "harness.log"
+      ],
+      "id": "harness",
+      "kind": "pytest",
+      "objective": true,
+      "seconds": 3.5,
+      "status": "pass",
+      "title": "State machine, idempotency, concurrency, intake authorization, outcome and memory guards"
+    },
+    {
+      "detail": "secret scan: 0 finding(s)",
+      "evidence_paths": [
+        "secret-scan.log"
+      ],
+      "id": "secret-scan",
+      "kind": "command",
+      "objective": true,
+      "seconds": 0.57,
+      "status": "pass",
+      "title": "No credentials in the repository or in the live site's shipped assets"
+    },
+    {
+      "detail": "live site and snapshot reachable; snapshot matches state",
+      "evidence_paths": [
+        "live-site.json"
+      ],
+      "id": "live-site",
+      "kind": "live",
+      "objective": true,
+      "seconds": 0.15,
+      "status": "pass",
+      "title": "Live Pages site loads and its data snapshot points at the state branch's latest run"
+    },
+    {
+      "detail": "checked 15 published files for quant-foundry-20261026T131341Z-768cdcd2-a1; mismatches: none",
+      "evidence_paths": [
+        "published-matches-state.log"
+      ],
+      "id": "published-matches-state",
+      "kind": "command",
+      "objective": true,
+      "seconds": 1.67,
+      "status": "pass",
+      "title": "Published result files are byte-identical to the accepted computation"
+    },
+    {
+      "detail": "30 passed, 0 failed",
+      "evidence_paths": [
+        "e2e/summary.json"
+      ],
+      "id": "browser",
+      "kind": "evidence-file",
+      "objective": true,
+      "seconds": 0.0,
+      "status": "pass",
+      "title": "Live-site browser checks at 390, 768 and 1440 px (states, interactions, keyboard, reduced motion, axe, overflow, console)"
+    }
+  ],
+  "project": "quant-foundry",
+  "release_id": "quant-foundry-20261026T131708Z-cf012dc",
+  "repair_round": 0,
+  "rubric_sha256": "sha256:95be335b4a61adab9ca6ec9108cc4074f3c93d2401e8e083752ced9b7c2d39fd",
+  "run_id": "quant-foundry-20261026T131341Z-768cdcd2-a1",
+  "source_commit": "cf012dc2d32a01cab82c65f3d1f6cb6f153273f5",
+  "status": "released",
+  "subjective": {
+    "reason": "inference credentials are not configured for this repository",
+    "scores": [],
+    "status": "not_run"
+  },
+  "workflow_run_url": "https://github.com/mrrishit909/quant-foundry/actions/runs/40328725526"
+}
