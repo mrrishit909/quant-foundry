@@ -1,0 +1,88 @@
+{
+  "buyhold": {
+    "description": "equal-weight (1/n) buy-and-hold of every symbol, bought at the first open of the span with the same fee and slippage, never rebalanced; in the holdout it is sold at the final close like the strategies",
+    "holdout": {
+      "metrics": {
+        "cagr": 0.1248924589,
+        "days": 302,
+        "exposure": 0.9912145849,
+        "fees_paid": 21.39315336,
+        "max_drawdown": -0.08418802482,
+        "round_trips": 6,
+        "sharpe": 0.9132841509,
+        "slippage_paid": 106.9695856,
+        "total_return": 0.1514685426,
+        "trades": 12,
+        "turnover": 1.979981735,
+        "volatility": 0.1395153745
+      },
+      "span": [
+        "2019-08-23",
+        "2020-10-19"
+      ]
+    },
+    "oos": {
+      "metrics": {
+        "cagr": 0.1315602498,
+        "days": 504,
+        "exposure": 0.9977538668,
+        "fees_paid": 9.973170433,
+        "max_drawdown": -0.1279954014,
+        "round_trips": 0,
+        "sharpe": 0.9209793533,
+        "slippage_paid": 49.8409317,
+        "total_return": 0.280428599,
+        "trades": 6,
+        "turnover": 0.9973170433,
+        "volatility": 0.1457380232
+      },
+      "span": [
+        "2017-09-18",
+        "2019-08-22"
+      ]
+    }
+  },
+  "cash": {
+    "description": "100,000 in cash earning 0 for the whole span",
+    "holdout": {
+      "metrics": {
+        "cagr": 0.0,
+        "days": 302,
+        "exposure": 0.0,
+        "fees_paid": 0.0,
+        "max_drawdown": 0.0,
+        "round_trips": 0,
+        "sharpe": 0.0,
+        "slippage_paid": 0.0,
+        "total_return": 0.0,
+        "trades": 0,
+        "turnover": 0.0,
+        "volatility": 0.0
+      },
+      "span": [
+        "2019-08-23",
+        "2020-10-19"
+      ]
+    },
+    "oos": {
+      "metrics": {
+        "cagr": 0.0,
+        "days": 504,
+        "exposure": 0.0,
+        "fees_paid": 0.0,
+        "max_drawdown": 0.0,
+        "round_trips": 0,
+        "sharpe": 0.0,
+        "slippage_paid": 0.0,
+        "total_return": 0.0,
+        "trades": 0,
+        "turnover": 0.0,
+        "volatility": 0.0
+      },
+      "span": [
+        "2017-09-18",
+        "2019-08-22"
+      ]
+    }
+  }
+}

@@ -26,6 +26,44 @@
         "strategy": "breakout"
       }
     ],
+    "63065ec63e1d9cd1547abf299ce01a0cf8f0db76b98d801b2920d64cde256d15": [
+      {
+        "frozen_params": {
+          "fast": 20,
+          "slow": 100
+        },
+        "run_id": "quant-foundry-20261026T131341Z-768cdcd2-a1",
+        "span": [
+          "2019-08-23",
+          "2020-10-19"
+        ],
+        "strategy": "trend"
+      },
+      {
+        "frozen_params": {
+          "entry_z": 1.5,
+          "lookback": 20
+        },
+        "run_id": "quant-foundry-20261026T131341Z-768cdcd2-a1",
+        "span": [
+          "2019-08-23",
+          "2020-10-19"
+        ],
+        "strategy": "meanrev"
+      },
+      {
+        "frozen_params": {
+          "N": 55,
+          "k": 0.0
+        },
+        "run_id": "quant-foundry-20261026T131341Z-768cdcd2-a1",
+        "span": [
+          "2019-08-23",
+          "2020-10-19"
+        ],
+        "strategy": "breakout"
+      }
+    ],
     "70ffbfac957256d432786affdc4b5dfb415a2cae7f97bfa83f5b67ae710036f4": [
       {
         "frozen_params": {

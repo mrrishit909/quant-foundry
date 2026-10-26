@@ -1,0 +1,78 @@
+{
+  "dataset": {
+    "calendar": "synthetic business days: pandas.bdate_range starting 2015-01-02, Monday to Friday, no exchange holidays",
+    "days": 1512,
+    "end": "2020-10-19",
+    "injected_defects": [
+      {
+        "date": "2017-11-14",
+        "kind": "missing_bar",
+        "symbol": "SYN06"
+      },
+      {
+        "date": "2018-07-13",
+        "kind": "missing_bar",
+        "symbol": "SYN06"
+      }
+    ],
+    "kind": "synthetic",
+    "regime_mix": "balanced",
+    "rows": 9072,
+    "seed": 202644,
+    "sha256": "63065ec63e1d9cd1547abf299ce01a0cf8f0db76b98d801b2920d64cde256d15",
+    "start": "2015-01-02",
+    "symbols": 6
+  },
+  "input_manifest_hash": "sha256:9efab77cf81dea904ba097ed0f2d73d93a3096ca0918a770ade64001a1d72102",
+  "package_version": "1.0.0",
+  "params": {
+    "allow_short": false,
+    "costs": {
+      "fee_bps": 1.0,
+      "slippage_bps": 5.0
+    },
+    "dataset": {
+      "days": 1512,
+      "kind": "synthetic",
+      "regime_mix": "balanced",
+      "seed": 202644,
+      "symbols": 6
+    },
+    "holdout_fraction": 0.2,
+    "strategies": [
+      "trend",
+      "meanrev",
+      "breakout"
+    ],
+    "walk_forward": {
+      "test_days": 126,
+      "train_days": 504
+    }
+  },
+  "source_manifest": {
+    "coverage": {
+      "end": "2020-10-19",
+      "rows": 9072,
+      "start": "2015-01-02",
+      "symbols": [
+        "SYN01",
+        "SYN02",
+        "SYN03",
+        "SYN04",
+        "SYN05",
+        "SYN06"
+      ]
+    },
+    "retrieval_date": null,
+    "sha256": "63065ec63e1d9cd1547abf299ce01a0cf8f0db76b98d801b2920d64cde256d15",
+    "source": "synthetic:seed=202644,symbols=6,days=1512,regime_mix=balanced",
+    "transformations": [
+      "generated in-process by quantfoundry.data.synthetic (numpy PCG64)",
+      "sorted rows by (date, symbol)",
+      "formatted dates as YYYY-MM-DD",
+      "rounded prices to 4 decimals",
+      "cast volume to integer",
+      "wrote missing values as empty fields"
+    ]
+  }
+}

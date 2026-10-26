@@ -1,0 +1,73 @@
+{
+  "evaluations": [
+    {
+      "frozen_params": {
+        "fast": 20,
+        "slow": 100
+      },
+      "metrics": {
+        "cagr": 0.1919792948,
+        "days": 302,
+        "exposure": 0.7802231239,
+        "fees_paid": 124.1444721,
+        "max_drawdown": -0.1425462059,
+        "round_trips": 21,
+        "sharpe": 1.337021697,
+        "slippage_paid": 620.728403,
+        "total_return": 0.2342450452,
+        "trades": 108,
+        "turnover": 11.96465463,
+        "volatility": 0.1385448003
+      },
+      "strategy": "trend"
+    },
+    {
+      "frozen_params": {
+        "entry_z": 1.5,
+        "lookback": 20
+      },
+      "metrics": {
+        "cagr": -0.05239463343,
+        "days": 302,
+        "exposure": 0.4667283596,
+        "fees_paid": 240.3994806,
+        "max_drawdown": -0.1943229318,
+        "round_trips": 43,
+        "sharpe": -0.4128835494,
+        "slippage_paid": 1201.996202,
+        "total_return": -0.06245933683,
+        "trades": 120,
+        "turnover": 22.1391633,
+        "volatility": 0.114502561
+      },
+      "strategy": "meanrev"
+    },
+    {
+      "frozen_params": {
+        "N": 55,
+        "k": 0.0
+      },
+      "metrics": {
+        "cagr": 0.1477687403,
+        "days": 302,
+        "exposure": 0.5534399419,
+        "fees_paid": 77.59873614,
+        "max_drawdown": -0.1051943147,
+        "round_trips": 15,
+        "sharpe": 1.19186352,
+        "slippage_paid": 387.9982868,
+        "total_return": 0.1795877778,
+        "trades": 59,
+        "turnover": 7.896927386,
+        "volatility": 0.1218718231
+      },
+      "strategy": "breakout"
+    }
+  ],
+  "sealed": true,
+  "selection_frozen_before_holdout": true,
+  "span": [
+    "2019-08-23",
+    "2020-10-19"
+  ]
+}
