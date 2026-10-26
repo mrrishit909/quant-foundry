@@ -1,0 +1,28 @@
+{
+  "engine": "e090bca4def26e5f",
+  "params": {
+    "allow_short": false,
+    "costs": {
+      "fee_bps": 1.0,
+      "slippage_bps": 5.0
+    },
+    "dataset": {
+      "days": 1512,
+      "kind": "synthetic",
+      "regime_mix": "balanced",
+      "seed": 202644,
+      "symbols": 6
+    },
+    "holdout_fraction": 0.2,
+    "strategies": [
+      "trend",
+      "meanrev",
+      "breakout"
+    ],
+    "walk_forward": {
+      "test_days": 126,
+      "train_days": 504
+    }
+  },
+  "request_id": "768cdcd2eceb5d4b"
+}
