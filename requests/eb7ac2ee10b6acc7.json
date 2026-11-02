@@ -3,10 +3,10 @@
     {
       "attempt": 1,
       "run_id": "quant-foundry-20261102T160937Z-eb7ac2ee-a1",
-      "status": "running"
+      "status": "completed"
     }
   ],
-  "latest_status": "running",
+  "latest_status": "completed",
   "params_hash": "sha256:2ff039f1cf735bfa85e96e2202918110592824a5c222448441fd54f2abbae90e",
   "request_id": "eb7ac2ee10b6acc7"
 }

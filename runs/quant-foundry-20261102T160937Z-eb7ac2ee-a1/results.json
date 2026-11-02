@@ -1,0 +1,206 @@
+{
+  "benchmarks": {
+    "buyhold": {
+      "holdout": {
+        "cagr": -0.02094123248,
+        "days": 302,
+        "exposure": 0.9890275753,
+        "fees_paid": 19.58966439,
+        "max_drawdown": -0.2050679838,
+        "round_trips": 6,
+        "sharpe": -0.09964192992,
+        "slippage_paid": 97.94772525,
+        "total_return": -0.0250438069,
+        "trades": 12,
+        "turnover": 1.980051013,
+        "volatility": 0.1290923676
+      },
+      "oos": {
+        "cagr": 0.06029005386,
+        "days": 504,
+        "exposure": 0.9996908683,
+        "fees_paid": 9.995724304,
+        "max_drawdown": -0.1574982954,
+        "round_trips": 0,
+        "sharpe": 0.4796260082,
+        "slippage_paid": 49.9536447,
+        "total_return": 0.1242149983,
+        "trades": 6,
+        "turnover": 0.9995724304,
+        "volatility": 0.1434571516
+      }
+    },
+    "cash": {
+      "holdout": {
+        "cagr": 0.0,
+        "days": 302,
+        "exposure": 0.0,
+        "fees_paid": 0.0,
+        "max_drawdown": 0.0,
+        "round_trips": 0,
+        "sharpe": 0.0,
+        "slippage_paid": 0.0,
+        "total_return": 0.0,
+        "trades": 0,
+        "turnover": 0.0,
+        "volatility": 0.0
+      },
+      "oos": {
+        "cagr": 0.0,
+        "days": 504,
+        "exposure": 0.0,
+        "fees_paid": 0.0,
+        "max_drawdown": 0.0,
+        "round_trips": 0,
+        "sharpe": 0.0,
+        "slippage_paid": 0.0,
+        "total_return": 0.0,
+        "trades": 0,
+        "turnover": 0.0,
+        "volatility": 0.0
+      }
+    }
+  },
+  "generated_by": "quantfoundry 1.0.0",
+  "strategies": [
+    {
+      "chosen_rank": 6,
+      "frozen_params": {
+        "fast": 40,
+        "slow": 50
+      },
+      "holdout_metrics": {
+        "cagr": 0.03502685384,
+        "days": 302,
+        "exposure": 0.6950267561,
+        "fees_paid": 185.2378046,
+        "max_drawdown": -0.1370073644,
+        "round_trips": 32,
+        "sharpe": 0.3255101161,
+        "slippage_paid": 926.190354,
+        "total_return": 0.04212114641,
+        "trades": 151,
+        "turnover": 17.17298188,
+        "volatility": 0.1326999812
+      },
+      "id": "trend",
+      "name": "Trend following (SMA crossover)",
+      "oos_metrics": {
+        "cagr": 0.01429900295,
+        "days": 504,
+        "exposure": 0.7070642008,
+        "fees_paid": 293.7780909,
+        "max_drawdown": -0.1887603358,
+        "round_trips": 50,
+        "sharpe": 0.1761111108,
+        "slippage_paid": 1468.817706,
+        "total_return": 0.02880246739,
+        "trades": 208,
+        "turnover": 29.27085856,
+        "volatility": 0.1246121549
+      },
+      "oos_t_stat": 0.2490587214,
+      "reasons": [
+        "OOS Sharpe 0.176 does not clear the 0.30 bar",
+        "OOS Sharpe t-statistic 0.249 is below the 2.0 significance bar (504 out-of-sample days)",
+        "OOS Sharpe 0.176 does not beat buy-and-hold OOS Sharpe 0.480"
+      ],
+      "stability": 0.5555555556,
+      "verdict": "rejected"
+    },
+    {
+      "chosen_rank": 1,
+      "frozen_params": {
+        "entry_z": 2.0,
+        "lookback": 20
+      },
+      "holdout_metrics": {
+        "cagr": 0.124312872,
+        "days": 302,
+        "exposure": 0.2707849733,
+        "fees_paid": 170.386149,
+        "max_drawdown": -0.05118812276,
+        "round_trips": 31,
+        "sharpe": 1.452548053,
+        "slippage_paid": 851.9347695,
+        "total_return": 0.1507575848,
+        "trades": 78,
+        "turnover": 15.71732921,
+        "volatility": 0.08304744583
+      },
+      "id": "meanrev",
+      "name": "Mean reversion (z-score)",
+      "oos_metrics": {
+        "cagr": 0.04026954571,
+        "days": 504,
+        "exposure": 0.4681255782,
+        "fees_paid": 642.4052455,
+        "max_drawdown": -0.1428359953,
+        "round_trips": 122,
+        "sharpe": 0.4062101566,
+        "slippage_paid": 3212.000207,
+        "total_return": 0.08216072774,
+        "trades": 332,
+        "turnover": 63.36023988,
+        "volatility": 0.112828334
+      },
+      "oos_t_stat": 0.5744679127,
+      "reasons": [
+        "OOS Sharpe t-statistic 0.574 is below the 2.0 significance bar (504 out-of-sample days)",
+        "OOS Sharpe 0.406 does not beat buy-and-hold OOS Sharpe 0.480"
+      ],
+      "stability": 0.5555555556,
+      "verdict": "rejected"
+    },
+    {
+      "chosen_rank": 7,
+      "frozen_params": {
+        "N": 100,
+        "k": 1.0
+      },
+      "holdout_metrics": {
+        "cagr": 0.06273796596,
+        "days": 302,
+        "exposure": 0.5551513272,
+        "fees_paid": 21.06553677,
+        "max_drawdown": -0.1102403729,
+        "round_trips": 4,
+        "sharpe": 0.5363414383,
+        "slippage_paid": 105.3296066,
+        "total_return": 0.07564630257,
+        "trades": 16,
+        "turnover": 2.032619152,
+        "volatility": 0.1289541256
+      },
+      "id": "breakout",
+      "name": "Volatility breakout",
+      "oos_metrics": {
+        "cagr": -0.05021609628,
+        "days": 504,
+        "exposure": 0.2444150131,
+        "fees_paid": 64.27333331,
+        "max_drawdown": -0.1664034574,
+        "round_trips": 11,
+        "sharpe": -0.5522309297,
+        "slippage_paid": 321.3409301,
+        "total_return": -0.09791053623,
+        "trades": 34,
+        "turnover": 6.461095528,
+        "volatility": 0.08651282797
+      },
+      "oos_t_stat": -0.7809724704,
+      "reasons": [
+        "OOS Sharpe -0.552 does not clear the 0.30 bar",
+        "OOS Sharpe t-statistic -0.781 is below the 2.0 significance bar (504 out-of-sample days)",
+        "OOS Sharpe -0.552 does not beat buy-and-hold OOS Sharpe 0.480"
+      ],
+      "stability": 0.5555555556,
+      "verdict": "rejected"
+    }
+  ],
+  "summary": {
+    "accepted": 0,
+    "headline": "All 3 strategies were rejected on this synthetic dataset: no strategy cleared every out-of-sample, significance, benchmark, holdout, stability and round-trip check.",
+    "rejected": 3
+  }
+}

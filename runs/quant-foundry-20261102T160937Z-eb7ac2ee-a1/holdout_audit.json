@@ -1,0 +1,30 @@
+{
+  "dataset_sha256": "bb6a841d6789887026262c0201419a7c14e4107a7020781595cadfad817f98e8",
+  "holdout_span": [
+    "2019-08-23",
+    "2020-10-19"
+  ],
+  "strategies": [
+    {
+      "contaminated": false,
+      "prior_evaluations": 0,
+      "prior_runs": [],
+      "reasons": [],
+      "strategy": "trend"
+    },
+    {
+      "contaminated": false,
+      "prior_evaluations": 0,
+      "prior_runs": [],
+      "reasons": [],
+      "strategy": "meanrev"
+    },
+    {
+      "contaminated": false,
+      "prior_evaluations": 0,
+      "prior_runs": [],
+      "reasons": [],
+      "strategy": "breakout"
+    }
+  ]
+}
