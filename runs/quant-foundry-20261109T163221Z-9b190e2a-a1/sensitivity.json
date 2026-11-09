@@ -1,0 +1,586 @@
+{
+  "strategies": {
+    "breakout": {
+      "best_oos_sharpe": 0.5561315754,
+      "chosen_rank": 1,
+      "combos": [
+        {
+          "metrics": {
+            "cagr": -0.04700276793,
+            "days": 504,
+            "exposure": 0.5537561641,
+            "fees_paid": 292.6918422,
+            "max_drawdown": -0.1982157614,
+            "round_trips": 51,
+            "sharpe": -0.3632931473,
+            "slippage_paid": 1463.371788,
+            "total_return": -0.09179627567,
+            "trades": 220,
+            "turnover": 29.79501591,
+            "volatility": 0.1144966514
+          },
+          "params": {
+            "N": 20,
+            "k": 0.0
+          }
+        },
+        {
+          "metrics": {
+            "cagr": -0.005631433619,
+            "days": 504,
+            "exposure": 0.3403643194,
+            "fees_paid": 172.324357,
+            "max_drawdown": -0.1522488125,
+            "round_trips": 31,
+            "sharpe": -0.008098534166,
+            "slippage_paid": 861.5725546,
+            "total_return": -0.01123115419,
+            "trades": 104,
+            "turnover": 17.30982143,
+            "volatility": 0.09861921151
+          },
+          "params": {
+            "N": 20,
+            "k": 0.5
+          }
+        },
+        {
+          "metrics": {
+            "cagr": -0.01110376918,
+            "days": 504,
+            "exposure": 0.1241867335,
+            "fees_paid": 67.66093861,
+            "max_drawdown": -0.1049966137,
+            "round_trips": 12,
+            "sharpe": -0.1355483992,
+            "slippage_paid": 338.285768,
+            "total_return": -0.02208424467,
+            "trades": 34,
+            "turnover": 6.735876832,
+            "volatility": 0.06622280195
+          },
+          "params": {
+            "N": 20,
+            "k": 1.0
+          }
+        },
+        {
+          "metrics": {
+            "cagr": -0.04245281441,
+            "days": 504,
+            "exposure": 0.5664438189,
+            "fees_paid": 149.5474159,
+            "max_drawdown": -0.1901023877,
+            "round_trips": 23,
+            "sharpe": -0.2757583089,
+            "slippage_paid": 747.6505553,
+            "total_return": -0.08310338737,
+            "trades": 111,
+            "turnover": 15.54028588,
+            "volatility": 0.127744292
+          },
+          "params": {
+            "N": 55,
+            "k": 0.0
+          }
+        },
+        {
+          "metrics": {
+            "cagr": 0.003340002905,
+            "days": 504,
+            "exposure": 0.3871971383,
+            "fees_paid": 86.5356475,
+            "max_drawdown": -0.1573113612,
+            "round_trips": 13,
+            "sharpe": 0.08714921629,
+            "slippage_paid": 432.6228747,
+            "total_return": 0.00669116143,
+            "trades": 54,
+            "turnover": 8.850838174,
+            "volatility": 0.117990132
+          },
+          "params": {
+            "N": 55,
+            "k": 0.5
+          }
+        },
+        {
+          "metrics": {
+            "cagr": -0.02605783428,
+            "days": 504,
+            "exposure": 0.2399083941,
+            "fees_paid": 51.79116903,
+            "max_drawdown": -0.1298403165,
+            "round_trips": 8,
+            "sharpe": -0.2383644432,
+            "slippage_paid": 258.9233238,
+            "total_return": -0.05143665782,
+            "trades": 29,
+            "turnover": 5.203222503,
+            "volatility": 0.09274052095
+          },
+          "params": {
+            "N": 55,
+            "k": 1.0
+          }
+        },
+        {
+          "metrics": {
+            "cagr": 0.01511903723,
+            "days": 504,
+            "exposure": 0.6054092116,
+            "fees_paid": 100.1453069,
+            "max_drawdown": -0.1336872135,
+            "round_trips": 14,
+            "sharpe": 0.1780290813,
+            "slippage_paid": 500.6595407,
+            "total_return": 0.03046665974,
+            "trades": 73,
+            "turnover": 10.27114829,
+            "volatility": 0.1366759132
+          },
+          "params": {
+            "N": 100,
+            "k": 0.0
+          }
+        },
+        {
+          "metrics": {
+            "cagr": 0.06372018483,
+            "days": 504,
+            "exposure": 0.4221369219,
+            "fees_paid": 59.15109472,
+            "max_drawdown": -0.1143481294,
+            "round_trips": 8,
+            "sharpe": 0.5561315754,
+            "slippage_paid": 295.7053844,
+            "total_return": 0.1315006316,
+            "trades": 33,
+            "turnover": 5.988174767,
+            "volatility": 0.1251320408
+          },
+          "params": {
+            "N": 100,
+            "k": 0.5
+          }
+        },
+        {
+          "metrics": {
+            "cagr": 0.06008933465,
+            "days": 504,
+            "exposure": 0.3434073162,
+            "fees_paid": 44.23370423,
+            "max_drawdown": -0.1120342624,
+            "round_trips": 6,
+            "sharpe": 0.5520770329,
+            "slippage_paid": 221.129963,
+            "total_return": 0.1237893974,
+            "trades": 25,
+            "turnover": 4.458207161,
+            "volatility": 0.1183700734
+          },
+          "params": {
+            "N": 100,
+            "k": 1.0
+          }
+        }
+      ],
+      "frozen_params": {
+        "N": 100,
+        "k": 0.5
+      },
+      "grid_size": 9,
+      "stability": 0.4444444444,
+      "tolerance": 0.5,
+      "within_tolerance": 4
+    },
+    "meanrev": {
+      "best_oos_sharpe": 1.785158194,
+      "chosen_rank": 1,
+      "combos": [
+        {
+          "metrics": {
+            "cagr": 0.06953704072,
+            "days": 504,
+            "exposure": 0.5392097442,
+            "fees_paid": 820.4227306,
+            "max_drawdown": -0.1457512785,
+            "round_trips": 156,
+            "sharpe": 0.683302295,
+            "slippage_paid": 4102.068601,
+            "total_return": 0.1439094815,
+            "trades": 427,
+            "turnover": 81.89573354,
+            "volatility": 0.106702582
+          },
+          "params": {
+            "entry_z": 1.0,
+            "lookback": 10
+          }
+        },
+        {
+          "metrics": {
+            "cagr": 0.07570815663,
+            "days": 504,
+            "exposure": 0.4380759332,
+            "fees_paid": 610.5240601,
+            "max_drawdown": -0.1200540142,
+            "round_trips": 118,
+            "sharpe": 0.8049552428,
+            "slippage_paid": 3052.59409,
+            "total_return": 0.1571480382,
+            "trades": 286,
+            "turnover": 60.54780918,
+            "volatility": 0.09643346924
+          },
+          "params": {
+            "entry_z": 1.5,
+            "lookback": 10
+          }
+        },
+        {
+          "metrics": {
+            "cagr": 0.08879770811,
+            "days": 504,
+            "exposure": 0.2286451547,
+            "fees_paid": 339.8284686,
+            "max_drawdown": -0.06296308301,
+            "round_trips": 65,
+            "sharpe": 1.203849414,
+            "slippage_paid": 1699.134759,
+            "total_return": 0.1854804492,
+            "trades": 143,
+            "turnover": 33.15768874,
+            "volatility": 0.07288080616
+          },
+          "params": {
+            "entry_z": 2.0,
+            "lookback": 10
+          }
+        },
+        {
+          "metrics": {
+            "cagr": 0.1711483244,
+            "days": 504,
+            "exposure": 0.5295317949,
+            "fees_paid": 547.66328,
+            "max_drawdown": -0.08358168055,
+            "round_trips": 97,
+            "sharpe": 1.522514848,
+            "slippage_paid": 2738.266756,
+            "total_return": 0.3715883977,
+            "trades": 292,
+            "turnover": 52.70980629,
+            "volatility": 0.107584189
+          },
+          "params": {
+            "entry_z": 1.0,
+            "lookback": 20
+          }
+        },
+        {
+          "metrics": {
+            "cagr": 0.1529267402,
+            "days": 504,
+            "exposure": 0.4540988291,
+            "fees_paid": 408.1973849,
+            "max_drawdown": -0.08538417881,
+            "round_trips": 75,
+            "sharpe": 1.497554601,
+            "slippage_paid": 2040.961512,
+            "total_return": 0.3292400683,
+            "trades": 198,
+            "turnover": 39.42969844,
+            "volatility": 0.0982606667
+          },
+          "params": {
+            "entry_z": 1.5,
+            "lookback": 20
+          }
+        },
+        {
+          "metrics": {
+            "cagr": 0.1190916702,
+            "days": 504,
+            "exposure": 0.3107401096,
+            "fees_paid": 276.8134143,
+            "max_drawdown": -0.06157242174,
+            "round_trips": 51,
+            "sharpe": 1.419719122,
+            "slippage_paid": 1384.046171,
+            "total_return": 0.2523661664,
+            "trades": 128,
+            "turnover": 26.76958191,
+            "volatility": 0.08160843637
+          },
+          "params": {
+            "entry_z": 2.0,
+            "lookback": 20
+          }
+        },
+        {
+          "metrics": {
+            "cagr": 0.1980546055,
+            "days": 504,
+            "exposure": 0.5556481742,
+            "fees_paid": 382.559889,
+            "max_drawdown": -0.07023720474,
+            "round_trips": 69,
+            "sharpe": 1.785158194,
+            "slippage_paid": 1912.783104,
+            "total_return": 0.4353348378,
+            "trades": 206,
+            "turnover": 36.65460444,
+            "volatility": 0.1042982279
+          },
+          "params": {
+            "entry_z": 1.0,
+            "lookback": 40
+          }
+        },
+        {
+          "metrics": {
+            "cagr": 0.1744761521,
+            "days": 504,
+            "exposure": 0.4448677564,
+            "fees_paid": 280.23171,
+            "max_drawdown": -0.07338093104,
+            "round_trips": 51,
+            "sharpe": 1.760543853,
+            "slippage_paid": 1401.140446,
+            "total_return": 0.379394232,
+            "trades": 145,
+            "turnover": 27.13584355,
+            "volatility": 0.09387314902
+          },
+          "params": {
+            "entry_z": 1.5,
+            "lookback": 40
+          }
+        },
+        {
+          "metrics": {
+            "cagr": 0.09491964038,
+            "days": 504,
+            "exposure": 0.3142986134,
+            "fees_paid": 166.6132604,
+            "max_drawdown": -0.0685180117,
+            "round_trips": 30,
+            "sharpe": 1.250136286,
+            "slippage_paid": 833.0446904,
+            "total_return": 0.1988490189,
+            "trades": 82,
+            "turnover": 16.37841773,
+            "volatility": 0.07478013152
+          },
+          "params": {
+            "entry_z": 2.0,
+            "lookback": 40
+          }
+        }
+      ],
+      "frozen_params": {
+        "entry_z": 1.0,
+        "lookback": 40
+      },
+      "grid_size": 9,
+      "stability": 0.5555555556,
+      "tolerance": 0.5,
+      "within_tolerance": 5
+    },
+    "trend": {
+      "best_oos_sharpe": 0.768441526,
+      "chosen_rank": 2,
+      "combos": [
+        {
+          "metrics": {
+            "cagr": -0.009605763007,
+            "days": 504,
+            "exposure": 0.7257491423,
+            "fees_paid": 318.1195043,
+            "max_drawdown": -0.2000732239,
+            "round_trips": 51,
+            "sharpe": -0.000212577386,
+            "slippage_paid": 1590.504318,
+            "total_return": -0.01911925533,
+            "trades": 282,
+            "turnover": 32.82863136,
+            "volatility": 0.1388464936
+          },
+          "params": {
+            "fast": 10,
+            "slow": 50
+          }
+        },
+        {
+          "metrics": {
+            "cagr": -0.01667979821,
+            "days": 504,
+            "exposure": 0.7661939105,
+            "fees_paid": 270.975669,
+            "max_drawdown": -0.2109159965,
+            "round_trips": 42,
+            "sharpe": -0.03989278705,
+            "slippage_paid": 1354.78566,
+            "total_return": -0.03308138076,
+            "trades": 252,
+            "turnover": 27.84780004,
+            "volatility": 0.1479080036
+          },
+          "params": {
+            "fast": 10,
+            "slow": 100
+          }
+        },
+        {
+          "metrics": {
+            "cagr": 0.01591000594,
+            "days": 504,
+            "exposure": 0.8480461416,
+            "fees_paid": 221.4082034,
+            "max_drawdown": -0.1621765301,
+            "round_trips": 32,
+            "sharpe": 0.1794182601,
+            "slippage_paid": 1106.942836,
+            "total_return": 0.03207314017,
+            "trades": 204,
+            "turnover": 22.61675763,
+            "volatility": 0.1535547973
+          },
+          "params": {
+            "fast": 10,
+            "slow": 200
+          }
+        },
+        {
+          "metrics": {
+            "cagr": -0.001929126741,
+            "days": 504,
+            "exposure": 0.7429269214,
+            "fees_paid": 274.4012129,
+            "max_drawdown": -0.1423651497,
+            "round_trips": 44,
+            "sharpe": 0.05506681029,
+            "slippage_paid": 1371.919573,
+            "total_return": -0.003854531953,
+            "trades": 243,
+            "turnover": 27.80602234,
+            "volatility": 0.1383253743
+          },
+          "params": {
+            "fast": 20,
+            "slow": 50
+          }
+        },
+        {
+          "metrics": {
+            "cagr": -0.01951068311,
+            "days": 504,
+            "exposure": 0.7593413686,
+            "fees_paid": 205.4162482,
+            "max_drawdown": -0.1759601381,
+            "round_trips": 31,
+            "sharpe": -0.05791618815,
+            "slippage_paid": 1026.989385,
+            "total_return": -0.03864069947,
+            "trades": 177,
+            "turnover": 21.06801525,
+            "volatility": 0.1489679078
+          },
+          "params": {
+            "fast": 20,
+            "slow": 100
+          }
+        },
+        {
+          "metrics": {
+            "cagr": 0.08017906423,
+            "days": 504,
+            "exposure": 0.8568033193,
+            "fees_paid": 146.0615768,
+            "max_drawdown": -0.1353962569,
+            "round_trips": 18,
+            "sharpe": 0.5810638547,
+            "slippage_paid": 730.2093835,
+            "total_return": 0.1667868108,
+            "trades": 135,
+            "turnover": 14.82545675,
+            "volatility": 0.1528186841
+          },
+          "params": {
+            "fast": 20,
+            "slow": 200
+          }
+        },
+        {
+          "metrics": {
+            "cagr": 0.01078716306,
+            "days": 504,
+            "exposure": 0.7409599535,
+            "fees_paid": 327.325269,
+            "max_drawdown": -0.1358861346,
+            "round_trips": 54,
+            "sharpe": 0.146443685,
+            "slippage_paid": 1636.533641,
+            "total_return": 0.02169068901,
+            "trades": 279,
+            "turnover": 33.17867849,
+            "volatility": 0.1427130525
+          },
+          "params": {
+            "fast": 40,
+            "slow": 50
+          }
+        },
+        {
+          "metrics": {
+            "cagr": 0.04042763263,
+            "days": 504,
+            "exposure": 0.7951727069,
+            "fees_paid": 162.0255183,
+            "max_drawdown": -0.1428546971,
+            "round_trips": 22,
+            "sharpe": 0.3387512398,
+            "slippage_paid": 810.0358811,
+            "total_return": 0.08248965875,
+            "trades": 135,
+            "turnover": 16.40888582,
+            "volatility": 0.1502839328
+          },
+          "params": {
+            "fast": 40,
+            "slow": 100
+          }
+        },
+        {
+          "metrics": {
+            "cagr": 0.1115966588,
+            "days": 504,
+            "exposure": 0.8694631845,
+            "fees_paid": 111.3549754,
+            "max_drawdown": -0.1258834137,
+            "round_trips": 13,
+            "sharpe": 0.768441526,
+            "slippage_paid": 556.6835176,
+            "total_return": 0.2356471318,
+            "trades": 93,
+            "turnover": 11.21638358,
+            "volatility": 0.1528952442
+          },
+          "params": {
+            "fast": 40,
+            "slow": 200
+          }
+        }
+      ],
+      "frozen_params": {
+        "fast": 20,
+        "slow": 200
+      },
+      "grid_size": 9,
+      "stability": 0.3333333333,
+      "tolerance": 0.5,
+      "within_tolerance": 3
+    }
+  }
+}

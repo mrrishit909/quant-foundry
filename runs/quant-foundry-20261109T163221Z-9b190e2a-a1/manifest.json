@@ -1,0 +1,73 @@
+{
+  "dataset": {
+    "calendar": "synthetic business days: pandas.bdate_range starting 2015-01-02, Monday to Friday, no exchange holidays",
+    "days": 1512,
+    "end": "2020-10-19",
+    "injected_defects": [
+      {
+        "date": "2015-07-23",
+        "kind": "missing_bar",
+        "symbol": "SYN03"
+      }
+    ],
+    "kind": "synthetic",
+    "regime_mix": "balanced",
+    "rows": 9072,
+    "seed": 202646,
+    "sha256": "81e241dc5c981565c78752f3a8478295b1d084fce5100ef782913161099a1c6e",
+    "start": "2015-01-02",
+    "symbols": 6
+  },
+  "input_manifest_hash": "sha256:731ce62cfb6e3835ee5fa88912da54cca6d032cd09f8c8b42845147ca216cbf4",
+  "package_version": "1.0.0",
+  "params": {
+    "allow_short": false,
+    "costs": {
+      "fee_bps": 1.0,
+      "slippage_bps": 5.0
+    },
+    "dataset": {
+      "days": 1512,
+      "kind": "synthetic",
+      "regime_mix": "balanced",
+      "seed": 202646,
+      "symbols": 6
+    },
+    "holdout_fraction": 0.2,
+    "strategies": [
+      "trend",
+      "meanrev",
+      "breakout"
+    ],
+    "walk_forward": {
+      "test_days": 126,
+      "train_days": 504
+    }
+  },
+  "source_manifest": {
+    "coverage": {
+      "end": "2020-10-19",
+      "rows": 9072,
+      "start": "2015-01-02",
+      "symbols": [
+        "SYN01",
+        "SYN02",
+        "SYN03",
+        "SYN04",
+        "SYN05",
+        "SYN06"
+      ]
+    },
+    "retrieval_date": null,
+    "sha256": "81e241dc5c981565c78752f3a8478295b1d084fce5100ef782913161099a1c6e",
+    "source": "synthetic:seed=202646,symbols=6,days=1512,regime_mix=balanced",
+    "transformations": [
+      "generated in-process by quantfoundry.data.synthetic (numpy PCG64)",
+      "sorted rows by (date, symbol)",
+      "formatted dates as YYYY-MM-DD",
+      "rounded prices to 4 decimals",
+      "cast volume to integer",
+      "wrote missing values as empty fields"
+    ]
+  }
+}

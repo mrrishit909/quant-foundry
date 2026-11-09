@@ -2,14 +2,14 @@
   "runs": [
     {
       "attempt": 1,
-      "completed_at": null,
+      "completed_at": "2026-11-09T16:32:50Z",
       "created_at": "2026-11-09T16:32:21Z",
-      "headline": null,
+      "headline": "1 of 3 strategies cleared every check and 2 were rejected; this is a result on synthetic data only, not evidence of an edge in real markets.",
       "issue": null,
       "request_id": "9b190e2ab703fd07",
       "run_id": "quant-foundry-20261109T163221Z-9b190e2a-a1",
       "source": "schedule",
-      "status": "running"
+      "status": "completed"
     },
     {
       "attempt": 1,
